@@ -6,20 +6,33 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class Rotator {
 
-    private final CRServo crServo;
-    private final AnalogInput encoder;
+    private final DcMotor motor;
     private final ColorSensor colorSensor;
 
+    private boolean goingRight = true;
 
+    private double targetPosition;
 
-    public Rotator() {
-        crServo = hardwareMap.get(CRServo.class,"rotatorServo");
-        encoder = hardwareMap.get(AnalogInput.class,"rotatorEncoder");
-        colorSensor = hardwareMap.get(ColorSensor.class,"rotatorColorSensor");
+    private turnModes turnMode = turnModes.RUN_TO_POSITION;
+
+    public enum turnModes {
+        CONSTANT_MOVEMENT,
+        RUN_TO_POSITION,
+        RUN_ON_POWER
     }
 
+
+
+    public Rotator(DcMotor motor1, ColorSensor colorSensor1) {
+        motor = motor1;
+        colorSensor = colorSensor1;
+    }
+
+
+    //FIXME: Get proper hue values for artifacts
     public String getCurrentColor() {
-        if(colorSensor.red()==0) {}
+        if(colorSensor.red()==0) {
+        }
         return "";
     }
 
@@ -47,7 +60,36 @@ public class Rotator {
         return ans;
     }
 
-    // FIXME: Find range of getVoltage and make this better based on it
-    public double getCurrentAngle() {return encoder.getVoltage() * 360;}
+    public void runMotor(double power) {
+        switch (turnMode) {
+            case RUN_ON_POWER:
+                motor.setPower(power);
+            case RUN_TO_POSITION:
+                motor.setPower(1.0d);
+            case CONSTANT_MOVEMENT:
+                if(goingRight) {
+                    motor.setPower(1.0d);
+                } else {
+                    motor.setPower(-1.0d);
+                }
+        }
+    }
+
+    public void setToConstant(boolean direction) {
+        goingRight = direction;
+        turnMode = turnModes.CONSTANT_MOVEMENT;
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setToPosition(double target) {
+        targetPosition = target;
+        turnMode = turnModes.RUN_TO_POSITION;
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void setToPower() {
+        turnMode = turnModes.RUN_ON_POWER;
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
 }
