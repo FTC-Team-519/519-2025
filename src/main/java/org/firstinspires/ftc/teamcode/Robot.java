@@ -8,10 +8,10 @@ public class Robot {
     private final Rotator rotator;
 
     public Robot(HardwareMap hardwareMap) {
-        leftFrontDrive = hardwareMap.get(DcMotor.class,"leftFrontDrive");
-        leftBackDrive = hardwareMap.get(DcMotor.class,"leftBackPower");
-        rightFrontDrive = hardwareMap.get(DcMotor.class,"rightFrontDrive");
-        rightBackDrive = hardwareMap.get(DcMotor.class,"rightBackDrive");
+        leftFrontDrive = hardwareMap.get(DcMotor.class,"leftFront");
+        leftBackDrive = hardwareMap.get(DcMotor.class,"leftBack");
+        rightFrontDrive = hardwareMap.get(DcMotor.class,"rightFront");
+        rightBackDrive = hardwareMap.get(DcMotor.class,"rightBack");
         intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
 
         rotator = new Rotator(
@@ -68,5 +68,21 @@ public class Robot {
             intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             intakeMotor.setPower(0.0d);
         }
+    }
+
+    public double getHueValue() {
+        return rotator.getCurrentHSV()[0];
+    }
+
+    public double[] getHSV() {
+        return rotator.getCurrentHSV();
+    }
+
+    public double[] getRGB() {
+        return rotator.getCurrentRGB();
+    }
+
+    public double getAlpha() {
+        return rotator.getCurrentAlpha();
     }
 }

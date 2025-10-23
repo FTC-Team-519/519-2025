@@ -36,6 +36,22 @@ public class Rotator {
         return "";
     }
 
+    public double[] getCurrentHSV() {
+        return rgbToHSV(colorSensor.red(),colorSensor.blue(),colorSensor.green());
+    }
+
+    public double[] getCurrentRGB() {
+        double[] rgb = new double[3];
+        rgb[0] = colorSensor.red();
+        rgb[1] = colorSensor.blue();
+        rgb[2] = colorSensor.green();
+        return rgb;
+    }
+
+    public double getCurrentAlpha() {
+        return colorSensor.alpha();
+    }
+
     public double[] rgbToHSV(double r, double g, double b) {
         double[] ans = new double[3];
         double hue,saturation,value;
