@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class BasicOpMode extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive;
+    private DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
 
     @Override
     public void runOpMode() {
@@ -16,11 +16,14 @@ public class BasicOpMode extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class,"leftBack");
         rightFrontDrive = hardwareMap.get(DcMotor.class,"rightFront");
         rightBackDrive = hardwareMap.get(DcMotor.class,"rightBack");
+        intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
+
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();
         runtime.reset();
@@ -53,6 +56,7 @@ public class BasicOpMode extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+            intakeMotor.setPower(gamepad1.right_stick_y)
         }
     }
 }
