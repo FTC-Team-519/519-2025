@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Rotator;
 
 public class Robot {
     private final DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
 
+    IMU imu;
     private final Rotator rotator;
 
     public Robot(HardwareMap hardwareMap) {
@@ -102,6 +104,21 @@ public class Robot {
     public DcMotor getRightBackDrive() {
         return rightBackDrive;
     }
+
+    //IMU
+    public YawPitchRollAngles getOrientation(){
+        assert imu != null;
+        return imu.getRobotYawPitchRollAngles();
+    }
+
+    public double getYaw(){
+        return getOrientation().getYaw();
+    }
+
+    public void resetYaw(){
+        imu.resetYaw();
+    }
+
 
 
     //CODE FROM LAST YEAR MAY NOT WORK
