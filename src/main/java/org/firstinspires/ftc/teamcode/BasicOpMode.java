@@ -17,11 +17,16 @@ public class BasicOpMode extends LinearOpMode {
         boolean aPressed = false;
 
         robot = new Robot(hardwareMap);
+        Rotator.pieceType[] motif = new Rotator.pieceType[3];
+        motif[0] = Rotator.pieceType.PURPLE;
+        motif[1] = Rotator.pieceType.GREEN;
+        motif[2] = Rotator.pieceType.PURPLE;
 
         waitForStart();
         runtime.reset();
 
         while(opModeIsActive()) {
+            robot.updateRotatorStuff();
 
             double max;
 
@@ -56,9 +61,10 @@ public class BasicOpMode extends LinearOpMode {
             robot.setRightBackPower(rightBackPower);
 
             robot.runRotatorMotor(gamepad1.right_trigger-gamepad1.left_trigger);
+            telemetry.addData("Rotator power",gamepad1.right_trigger + " - " + gamepad1.left_trigger);
 
             if(gamepad1.a && !aPressed) {
-                robot.swapIntakeRunMode();
+                robot.fixRotatorStuff(motif);
                 aPressed = true;
             }
             else if(!gamepad1.a && aPressed) {
@@ -72,11 +78,15 @@ public class BasicOpMode extends LinearOpMode {
             robot.runIntake(inPower);
 
             telemetry.addData("Hue Value",robot.getHueValue());
-            double[] hsv = robot.getHSV();
+            float[] hsv = robot.getHSV();
             telemetry.addData("HSV Values",hsv[0] + " " + hsv[1] + " " + hsv[2] );
             double[] rgb = robot.getRGB();
             telemetry.addData("RGB Values",rgb[0] + " " + rgb[1] + " " + rgb[2]);
             telemetry.addData("Alpha Value",robot.getAlpha());
+            telemetry.addData("Piece Color",robot.pieceType());
+            telemetry.addData("Rotator Position",robot.getRotatorPosition());
+            telemetry.addData("Intake Position",robot.getIntakeMotor().getCurrentPosition());
+            telemetry.addData("Pieces Inside",robot.piecesIn());
 
             telemetry.update();
         }

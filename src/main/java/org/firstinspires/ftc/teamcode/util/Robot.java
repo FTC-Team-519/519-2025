@@ -15,10 +15,7 @@ public class Robot {
         rightBackDrive = hardwareMap.get(DcMotor.class,"rightBack");
         intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
 
-        rotator = new Rotator(
-                hardwareMap.get(DcMotor.class,"rotatorMotor"),
-                hardwareMap.get(ColorSensor.class,"colorSensor")
-        );
+        rotator = new Rotator(hardwareMap);
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -28,6 +25,28 @@ public class Robot {
 
         intakeMotor.setTargetPosition(0);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        rotator.getMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotator.setToPower();
+    }
+
+    public DcMotor getLeftFrontDrive() {
+        return leftFrontDrive;
+    }
+    public DcMotor getLeftBackDrive() {
+        return leftBackDrive;
+    }
+    public DcMotor getRightBackDrive() {
+        return rightBackDrive;
+    }
+    public DcMotor getRightFrontDrive() {
+        return rightFrontDrive;
+    }
+    public DcMotor getIntakeMotor() {
+        return intakeMotor;
+    }
+    public DcMotor getRotatorMotor() {
+        return rotator.getMotor();
     }
 
     public void setLeftFrontPower(double power) {
@@ -45,6 +64,22 @@ public class Robot {
 
     public void runRotatorMotor(double power) {
         rotator.runMotor(power);
+    }
+
+    public void updateRotatorStuff() {
+        rotator.updateCurrentStuff();
+    }
+
+    public boolean fixRotatorStuff(Rotator.pieceType[] motif) {
+        return rotator.fixCurrentStuff(motif);
+    }
+
+    public Rotator.pieceType[] currentRotatorStuff() {
+        return rotator.getCurrentStuff();
+    }
+
+    public int getRotatorPosition() {
+        return rotator.getPosition();
     }
 
     public boolean intakeAtPosition() {
@@ -75,7 +110,40 @@ public class Robot {
         return rotator.getCurrentHSV()[0];
     }
 
-    public double[] getHSV() {
+    public String pieceType() {
+        return pieceType(getPieceType());
+    }
+
+    public String pieceType(Rotator.pieceType p) {
+        switch(p) {
+            case NOT_THERE:
+                return "Not there";
+            case GREEN:
+                return "Green";
+            case PURPLE:
+                return "Purple";
+            default:
+                return "I have no earthly idea";
+        }
+    }
+
+    public String piecesIn() {
+        String ans = "";
+        for(Rotator.pieceType p:currentRotatorStuff()) {
+            if(p!=null) {
+                ans += pieceType(p) + " ";
+            } else {
+                ans += "null ";
+            }
+        }
+        return ans;
+    }
+
+    public Rotator.pieceType getPieceType() {
+        return rotator.getPieceColor();
+    }
+
+    public float[] getHSV() {
         return rotator.getCurrentHSV();
     }
 

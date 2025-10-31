@@ -1,19 +1,28 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
 import com.qualcomm.robotcore.hardware.*;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Arrays;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 public class Rotator {
 
+    public final double CLICKS_PER_ROTATION = 5281.1;
+    public final double GEAR_RATIO = 2.0;
+
     private final DcMotor motor;
-    private final ColorSensor colorSensor;
+    private final ColorRangeSensor colorSensor;
 
     private boolean goingRight = true;
 
-    private double targetPosition;
+    private pieceType[] currentStuff = new pieceType[3];
 
-    private turnModes turnMode = turnModes.RUN_TO_POSITION;
+    private int currentPosition = 0;
+
+    private turnModes turnMode;
 
     public enum turnModes {
         CONSTANT_MOVEMENT,
@@ -21,22 +30,72 @@ public class Rotator {
         RUN_ON_POWER
     }
 
-
-
-    public Rotator(DcMotor motor1, ColorSensor colorSensor1) {
-        motor = motor1;
-        colorSensor = colorSensor1;
+    public enum pieceType {
+        NOT_THERE,
+        GREEN,
+        PURPLE
     }
 
-
-    //FIXME: Get proper hue values for artifacts
-    public String getCurrentColor() {
-        if(colorSensor.red()==0) {
+    public void updateCurrentStuff() {
+        if(getPosition()!=currentPosition) {
+            currentStuff[getPosition()] = getPieceColor();
+            currentPosition = getPosition();
         }
-        return "";
     }
 
-    public double[] getCurrentHSV() {
+    public boolean fixCurrentStuff(pieceType[] motif) {
+        if(!Arrays.equals(currentStuff, motif)) {
+            if(Arrays.equals(motif,rotate(currentStuff))) {
+                setToPosition(motor.getCurrentPosition()+getClicksPerRotation()/3);
+                return true;
+            } else if(Arrays.equals(motif,rotate(rotate(currentStuff)))) {
+                setToPosition(motor.getCurrentPosition()-getClicksPerRotation()/3);
+                return true;
+            }
+        } else {
+            return true;
+        }
+        return false;
+    }
+
+    public pieceType[] rotate(pieceType[] orig) {
+        pieceType[] ans = new pieceType[3];
+        ans[0] = orig[2];
+        ans[1] = orig[0];
+        ans[2] = orig[1];
+        return ans;
+    }
+    public pieceType[] getCurrentStuff() {
+        return currentStuff;
+    }
+
+
+
+    public Rotator(HardwareMap hardwareMap) {
+        motor = hardwareMap.get(DcMotor.class,"rotatorMotor");
+        colorSensor = hardwareMap.get(ColorRangeSensor.class,"colorSensor");
+        turnMode = turnModes.RUN_ON_POWER;
+    }
+
+    public pieceType getPieceColor() {
+        if(!doesIntakeContainPiece(2.0)) {
+            return pieceType.NOT_THERE;
+        } else if(getCurrentHSV()[0]>160) {
+            return pieceType.GREEN;
+        } else {
+            return pieceType.PURPLE;
+        }
+    }
+
+    public pieceType[] getCurrentOrder() {
+        return currentStuff;
+    }
+
+    public boolean doesIntakeContainPiece(double visibleDistance) {
+        return(colorSensor.getDistance(DistanceUnit.INCH)<visibleDistance);
+    }
+
+    public float[] getCurrentHSV() {
         return rgbToHSV(colorSensor.red(),colorSensor.blue(),colorSensor.green());
     }
 
@@ -52,54 +111,59 @@ public class Rotator {
         return colorSensor.alpha();
     }
 
-    public double[] rgbToHSV(double r, double g, double b) {
-        double[] ans = new double[3];
-        double hue,saturation,value;
+    public float[] rgbToHSV(int r, int g, int b) {
+        float[] ret = new float[3];
+        Color.RGBToHSV(r*8,g*8,b*8,ret);
+        return ret;
+    }
 
-        double maximum = Math.max(Math.max(r,g),b);
-        double minimum = Math.min(Math.min(r,g),b);
-        double delta = maximum - minimum;
+    public DcMotor getMotor() {
+        return motor;
+    }
 
-        if(delta==0) {hue = 0;}
-        else if(maximum==r) {hue = 60 * (((g-b)/(255*delta))%6);}
-        else if(maximum==g) {hue = 60 * ((b-r)/(255*delta)+2);}
-        else {hue = 60 * ((r-g)/(255*delta)+4);}
+    public void runMotor() {
+        runMotor(0.0d);
+    }
 
-        if(maximum==0) {saturation = 0;}
-        else {saturation = delta/(255*maximum);}
-
-        value = maximum/255;
-        ans[0] = hue;
-        ans[1] = saturation;
-        ans[2] = value;
-
-        return ans;
+    public int getPosition() {
+        return Math.floorMod((int)(Math.floor(motor.getCurrentPosition() / getClicksPerRotation() * 3)),3);
     }
 
     public void runMotor(double power) {
         switch (turnMode) {
             case RUN_ON_POWER:
                 motor.setPower(power);
+                break;
             case RUN_TO_POSITION:
                 motor.setPower(1.0d);
+                if(motor.getCurrentPosition()==motor.getTargetPosition()) {
+                    setToPower();
+                }
+                break;
             case CONSTANT_MOVEMENT:
                 if(goingRight) {
                     motor.setPower(1.0d);
+                    break;
                 } else {
                     motor.setPower(-1.0d);
+                    break;
                 }
         }
     }
 
-    public void setToConstant(boolean direction) {
-        goingRight = direction;
+    public double getClicksPerRotation() {
+        return CLICKS_PER_ROTATION * GEAR_RATIO;
+    }
+
+    public void setToConstant(boolean goRight) {
+        goingRight = goRight;
         turnMode = turnModes.CONSTANT_MOVEMENT;
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void setToPosition(double target) {
-        targetPosition = target;
         turnMode = turnModes.RUN_TO_POSITION;
+        motor.setTargetPosition((int)target);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
