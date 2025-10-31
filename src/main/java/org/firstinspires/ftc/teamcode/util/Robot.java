@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Rotator;
 
 public class Robot {
     private final DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
 
+    IMU imu;
     private final Rotator rotator;
 
     public Robot(HardwareMap hardwareMap) {
@@ -154,4 +156,134 @@ public class Robot {
     public double getAlpha() {
         return rotator.getCurrentAlpha();
     }
+
+    public DcMotor getLeftFrontDrive() {
+        return leftFrontDrive;
+    }
+
+    public DcMotor getLeftBackDrive() {
+        return leftBackDrive;
+    }
+
+    public DcMotor getRightFrontDrive() {
+        return rightFrontDrive;
+    }
+
+    public DcMotor getRightBackDrive() {
+        return rightBackDrive;
+    }
+
+    //IMU
+    public YawPitchRollAngles getOrientation(){
+        assert imu != null;
+        return imu.getRobotYawPitchRollAngles();
+    }
+
+    public double getYaw(){
+        return getOrientation().getYaw();
+    }
+
+    public void resetYaw(){
+        imu.resetYaw();
+    }
+
+
+
+    //CODE FROM LAST YEAR MAY NOT WORK
+    public boolean isTargetPositionsForDriveMotorsSet(int position) {
+        return(leftFrontDrive.getTargetPosition()==position && leftBackDrive.getTargetPosition()==position &&
+                rightFrontDrive.getTargetPosition()==position && rightBackDrive.getTargetPosition()==position);
+    }
+
+    public static double getCountsPerInchForDriveMotors() {
+        final double     COUNTS_PER_MOTOR_REV    = 384.5  ;    // eg: Using 5203 Yellowjacket 435 RPM w/ given encoder
+        final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // Simple Bevel Gear ratio is 2:1
+        final double     WHEEL_DIAMETER_INCHES   = 4;     // For figuring circumference
+        return (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+    }
+
+    public void setDriveMode(DcMotor.RunMode mode) {
+        leftFrontDrive.setMode(mode);
+        rightFrontDrive.setMode(mode);
+        leftBackDrive.setMode(mode);
+        rightBackDrive.setMode(mode);
+    }
+
+    public void setLeftDrivePower(double power) {
+        leftFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+    }
+
+    public void setRightDrivePower(double power) {
+        rightFrontDrive.setPower(power);
+        rightBackDrive.setPower(power);
+    }
+
+    public void setAllDrivePower(double power) {
+        setLeftDrivePower(power);
+        setRightDrivePower(power);
+    }
+
+    public void setStrafeLeftPower(double power){
+        leftFrontDrive.setPower(-power);
+        leftBackDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        rightBackDrive.setPower(-power);
+    }
+
+    public void setStrafeRightPower(double power){
+        leftFrontDrive.setPower(power);
+        leftBackDrive.setPower(-power);
+        rightFrontDrive.setPower(-power);
+        rightBackDrive.setPower(power);
+    }
+
+    public void setDriveTargetPosition(int position) {
+        leftFrontDrive.setTargetPosition(position);
+        rightFrontDrive.setTargetPosition(position);
+        leftBackDrive.setTargetPosition(position);
+        rightBackDrive.setTargetPosition(position);
+    }
+
+    public void rotateClockwise(double speed) {
+        leftFrontDrive.setPower(speed);
+        rightFrontDrive.setPower(-speed);
+        leftBackDrive.setPower(speed);
+        rightBackDrive.setPower(-speed);
+    }
+
+    public void rotateCounterClockwise(double speed) {
+        leftFrontDrive.setPower(-speed);
+        rightFrontDrive.setPower(speed);
+        leftBackDrive.setPower(-speed);
+        rightBackDrive.setPower(speed);
+    }
+
+
+
+
+    public boolean atDriveTargetPosition(boolean isGoingForward) {
+        if (isGoingForward) {
+            return atDriveTargetPositionForward();
+        }
+        else {
+            return atDriveTargetPositionBackward();
+        }
+    }
+
+    public boolean atDriveTargetPositionForward() {
+        return(leftFrontDrive.getCurrentPosition() >= leftFrontDrive.getTargetPosition() &&
+                rightFrontDrive.getCurrentPosition() >= rightFrontDrive.getTargetPosition() &&
+                leftBackDrive.getCurrentPosition() >= leftBackDrive.getTargetPosition() &&
+                rightBackDrive.getCurrentPosition() >= rightBackDrive.getTargetPosition());
+    }
+
+    public boolean atDriveTargetPositionBackward() {
+        return(leftFrontDrive.getCurrentPosition() <= leftFrontDrive.getTargetPosition() &&
+                rightFrontDrive.getCurrentPosition() <= rightFrontDrive.getTargetPosition() &&
+                leftBackDrive.getCurrentPosition() <= leftBackDrive.getTargetPosition() &&
+                rightBackDrive.getCurrentPosition() <= rightBackDrive.getTargetPosition());
+    }
+    //END OF CODE FROM LAST YEAR
+
 }
