@@ -1,7 +1,7 @@
 # 519-2025
 
-##Game Plan for Auto:
-###ideal auto
+## Game Plan for Auto:
+### ideal auto
 - Figure out the motif
   - move the position to see the motif
     - move to the positon
@@ -15,7 +15,7 @@
     - get the ball into the outtake????(yet to figure out)(build team bad)
     - shoot the ball at the proper speed
 - Go find more balls(figure out later)
-###teleop:
+### teleop:
 - Two modes
   - shoot mode
     - automatically lines up the shot for the driver
@@ -23,8 +23,8 @@
   - regular mode
     - drive in any direction with mechanum
   
-##TODO:
-###Commands:
+## TODO:
+### Commands:
 - [ ] move to outtake command 1 
 - [ ] Shoot command 2
 - [ ] shoot current ball command (combination of the two above) 3
@@ -33,6 +33,6 @@
 - [ ] Disk Rotate 4
 - [ ] Rotate cannon(if possible) 7
 - [ ] dynamic Command 6
-###other things
+### other things
 - [ ] name the robot
 - [ ] 
