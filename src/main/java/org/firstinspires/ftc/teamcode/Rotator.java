@@ -6,19 +6,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Arrays;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 public class Rotator {
 
-    public final double CLICKS_PER_ROTATION = 5281.1;
+    public final double CLICKS_PER_ROTATION = 751.8;
     public final double GEAR_RATIO = 2.0;
 
     private final DcMotor motor;
     private final ColorRangeSensor colorSensor;
 
-    private boolean goingRight = true;
+    private boolean clockwise = true;
 
-    private pieceType[] currentStuff = new pieceType[3];
+    private pieceType[] currentArtifacts = new pieceType[3];
 
     private int currentPosition = 0;
 
@@ -36,20 +34,20 @@ public class Rotator {
         PURPLE
     }
 
-    public void updateCurrentStuff() {
+    public void updateCurrentArtifacts() {
         if(getPosition()!=currentPosition) {
-            currentStuff[getPosition()] = getPieceColor();
+            currentArtifacts[getPosition()] = getPieceColor();
             currentPosition = getPosition();
         }
     }
 
-    public boolean fixCurrentStuff(pieceType[] motif) {
-        if(!Arrays.equals(currentStuff, motif)) {
-            if(Arrays.equals(motif,rotate(currentStuff))) {
-                setToPosition(motor.getCurrentPosition()+getClicksPerRotation()/3);
+    public boolean fixCurrentArtifacts(pieceType[] motif) {
+        if(!Arrays.equals(currentArtifacts, motif)) {
+            if(Arrays.equals(motif,rotate(currentArtifacts))) {
+                setToPosition(motor.getCurrentPosition()+ getEncoderClicksPerRotation()/3);
                 return true;
-            } else if(Arrays.equals(motif,rotate(rotate(currentStuff)))) {
-                setToPosition(motor.getCurrentPosition()-getClicksPerRotation()/3);
+            } else if(Arrays.equals(motif,rotate(rotate(currentArtifacts)))) {
+                setToPosition(motor.getCurrentPosition()- getEncoderClicksPerRotation()/3);
                 return true;
             }
         } else {
@@ -65,8 +63,8 @@ public class Rotator {
         ans[2] = orig[1];
         return ans;
     }
-    public pieceType[] getCurrentStuff() {
-        return currentStuff;
+    public pieceType[] getCurrentArtifacts() {
+        return currentArtifacts;
     }
 
 
@@ -88,7 +86,7 @@ public class Rotator {
     }
 
     public pieceType[] getCurrentOrder() {
-        return currentStuff;
+        return currentArtifacts;
     }
 
     public boolean doesIntakeContainPiece(double visibleDistance) {
@@ -126,7 +124,8 @@ public class Rotator {
     }
 
     public int getPosition() {
-        return Math.floorMod((int)(Math.floor(motor.getCurrentPosition() / getClicksPerRotation() * 3)),3);
+        return Math.floorMod((int)(Math.floor(motor.getCurrentPosition() /
+                getEncoderClicksPerRotation() * 3)),3);
     }
 
     public void runMotor(double power) {
@@ -141,7 +140,7 @@ public class Rotator {
                 }
                 break;
             case CONSTANT_MOVEMENT:
-                if(goingRight) {
+                if(clockwise) {
                     motor.setPower(1.0d);
                     break;
                 } else {
@@ -151,12 +150,12 @@ public class Rotator {
         }
     }
 
-    public double getClicksPerRotation() {
+    public double getEncoderClicksPerRotation() {
         return CLICKS_PER_ROTATION * GEAR_RATIO;
     }
 
     public void setToConstant(boolean goRight) {
-        goingRight = goRight;
+        clockwise = goRight;
         turnMode = turnModes.CONSTANT_MOVEMENT;
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }

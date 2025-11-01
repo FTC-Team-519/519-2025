@@ -10,6 +10,8 @@ public class Robot {
     IMU imu;
     private final Rotator rotator;
 
+    private final Outtake outtake;
+
     public Robot(HardwareMap hardwareMap) {
         leftFrontDrive = hardwareMap.get(DcMotor.class,"leftFront");
         leftBackDrive = hardwareMap.get(DcMotor.class,"leftBack");
@@ -17,6 +19,7 @@ public class Robot {
         rightBackDrive = hardwareMap.get(DcMotor.class,"rightBack");
         intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
 
+        outtake = new Outtake(hardwareMap);
         rotator = new Rotator(hardwareMap);
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -32,18 +35,12 @@ public class Robot {
         rotator.setToPower();
     }
 
-    public DcMotor getLeftFrontDrive() {
-        return leftFrontDrive;
+    public void runOuttake(double power) {outtake.runMotors(power);}
+
+    public void BLASTTTTTTTTT() {
+        runOuttake(1.0d);
     }
-    public DcMotor getLeftBackDrive() {
-        return leftBackDrive;
-    }
-    public DcMotor getRightBackDrive() {
-        return rightBackDrive;
-    }
-    public DcMotor getRightFrontDrive() {
-        return rightFrontDrive;
-    }
+
     public DcMotor getIntakeMotor() {
         return intakeMotor;
     }
@@ -69,15 +66,15 @@ public class Robot {
     }
 
     public void updateRotatorStuff() {
-        rotator.updateCurrentStuff();
+        rotator.updateCurrentArtifacts();
     }
 
-    public boolean fixRotatorStuff(Rotator.pieceType[] motif) {
-        return rotator.fixCurrentStuff(motif);
+    public boolean fixRotatorArtifacts(Rotator.pieceType[] motif) {
+        return rotator.fixCurrentArtifacts(motif);
     }
 
-    public Rotator.pieceType[] currentRotatorStuff() {
-        return rotator.getCurrentStuff();
+    public Rotator.pieceType[] currentRotatorArtifacts() {
+        return rotator.getCurrentArtifacts();
     }
 
     public int getRotatorPosition() {
@@ -131,7 +128,7 @@ public class Robot {
 
     public String piecesIn() {
         String ans = "";
-        for(Rotator.pieceType p:currentRotatorStuff()) {
+        for(Rotator.pieceType p: currentRotatorArtifacts()) {
             if(p!=null) {
                 ans += pieceType(p) + " ";
             } else {
@@ -258,6 +255,7 @@ public class Robot {
         leftBackDrive.setPower(-speed);
         rightBackDrive.setPower(speed);
     }
+
 
 
 
