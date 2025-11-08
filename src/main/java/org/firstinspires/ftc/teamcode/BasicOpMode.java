@@ -93,6 +93,7 @@ public class BasicOpMode extends LinearOpMode {
             telemetry.addData("Rotator Position",robot.getRotatorPosition());
             telemetry.addData("Intake Position",robot.getIntakeMotor().getCurrentPosition());
             telemetry.addData("Pieces Inside",robot.piecesIn());
+            telemetry.addData("Distance From Piece",robot.distanceFromPiece());
 
             telemetry.update();
         }
