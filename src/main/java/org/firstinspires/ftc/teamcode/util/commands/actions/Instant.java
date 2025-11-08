@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 import java.util.function.Supplier;
 
 public class Instant implements Command {
+
     private Command command = null;
     //It can return null because we handled those cases in our methods
     private final Supplier<Command> command_creator;
