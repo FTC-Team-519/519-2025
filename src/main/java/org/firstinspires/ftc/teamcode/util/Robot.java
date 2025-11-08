@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Rotator;
@@ -33,6 +34,9 @@ public class Robot {
 
         rotator.getMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotator.setToPower();
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD)));
     }
 
     public void runOuttake(double power) {outtake.runMotors(power);}
