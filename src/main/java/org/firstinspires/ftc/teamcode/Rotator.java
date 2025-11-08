@@ -76,13 +76,17 @@ public class Rotator {
     }
 
     public pieceType getPieceColor() {
-        if(!doesIntakeContainPiece(2.0)) {
+        if(!doesIntakeContainPiece(5.0)) {
             return pieceType.NOT_THERE;
         } else if(getCurrentHSV()[0]>160) {
             return pieceType.GREEN;
         } else {
             return pieceType.PURPLE;
         }
+    }
+
+    public double distance() {
+        return colorSensor.getDistance(DistanceUnit.INCH);
     }
 
     public pieceType[] getCurrentOrder() {
