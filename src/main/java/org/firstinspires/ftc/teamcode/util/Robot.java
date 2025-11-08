@@ -41,6 +41,8 @@ public class Robot {
         runOuttake(1.0d);
     }
 
+    public double distanceFromPiece() {return rotator.distance();}
+
     public DcMotor getIntakeMotor() {
         return intakeMotor;
     }
