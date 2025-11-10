@@ -13,6 +13,8 @@ public class Robot {
 
     private final Outtake outtake;
 
+    private final Kicker kicker;
+
     public Robot(HardwareMap hardwareMap) {
         leftFrontDrive = hardwareMap.get(DcMotor.class,"leftFront");
         leftBackDrive = hardwareMap.get(DcMotor.class,"leftBack");
@@ -22,6 +24,7 @@ public class Robot {
 
         outtake = new Outtake(hardwareMap);
         rotator = new Rotator(hardwareMap);
+        kicker = new Kicker(hardwareMap);
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -158,6 +161,28 @@ public class Robot {
 
     public double getAlpha() {
         return rotator.getCurrentAlpha();
+    }
+
+    public void engageDisengageKicker() {
+        kicker.runEngager();
+    }
+
+    public void engageDisengageKicker(boolean goingBack) {
+        kicker.runEngager(goingBack);
+    }
+
+    public void getReadyToKick() {
+        kicker.runEngager(false);
+        kicker.runRotator(1.0d); // FIXME: Get a good speed
+    }
+
+    public void stopKicking() {
+        kicker.runEngager(true);
+        kicker.stop();
+    }
+
+    public void runKicker(double power) {
+        kicker.runRotator(power);
     }
 
     public DcMotor getLeftFrontDrive() {
