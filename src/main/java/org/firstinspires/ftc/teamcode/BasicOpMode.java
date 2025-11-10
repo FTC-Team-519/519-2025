@@ -81,9 +81,9 @@ public class BasicOpMode extends LinearOpMode {
             if(gamepad2.a && !a2Pressed) {
                 robot.getReadyToKick();
                 a2Pressed = true;
-            } else if(!a2Pressed) {
+            } else if(a2Pressed && !gamepad2.a) {
                 a2Pressed = false;
-            } else {
+            } else if(!gamepad2.a){
                 robot.stopKicking();
             }
 
