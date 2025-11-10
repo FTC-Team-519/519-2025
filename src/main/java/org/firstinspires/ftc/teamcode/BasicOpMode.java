@@ -15,6 +15,7 @@ public class BasicOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         boolean aPressed = false;
+        boolean a2Pressed = false;
 
         robot = new Robot(hardwareMap);
         Rotator.pieceType[] motif = new Rotator.pieceType[3];
@@ -71,10 +72,19 @@ public class BasicOpMode extends LinearOpMode {
                 aPressed = false;
             }
 
-            if(gamepad1.b) {
+            if(gamepad2.b) {
                 robot.BLASTTTTTTTTT();
             } else {
                 robot.runOuttake(-gamepad2.left_stick_y);
+            }
+
+            if(gamepad2.a && !a2Pressed) {
+                robot.getReadyToKick();
+                a2Pressed = true;
+            } else if(!a2Pressed) {
+                a2Pressed = false;
+            } else {
+                robot.stopKicking();
             }
 
             if(robot.intakeAtPosition()) {
