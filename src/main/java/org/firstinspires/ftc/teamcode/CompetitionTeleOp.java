@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 
 @TeleOp(name = "Competition TeleOp")
@@ -15,13 +16,52 @@ public class CompetitionTeleOp extends OpModeBase {
 
     @Override
     public void loop() {
-        if (!driving_field_centric) {
+        if (gamepad1.aWasReleased()) {
+            driving_field_centric = !driving_field_centric;
+        }
+
+        //intake
+        robot.runIntake(gamepad1.right_trigger);
+
+        //rotating the disk
+        if (gamepad1.leftBumperWasReleased()){
+            //rotate left
+        }else if(gamepad1.rightBumperWasReleased()){
+            //rotate right
+        }
+
+        //regular driving
+        if (driving_field_centric) {
+            double x = gamepad1.left_stick_x;
+            double y = -gamepad1.left_stick_y;
+            double angle = robot.getYaw() * Math.PI / 180.0;
+            driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), gamepad1.right_stick_x);
+        } else {
             driving(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
 
+        //we want regular driving to be overwritten by dpad driving
+        if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
+            double x = 0;
+            double y = 0;
+            if (gamepad1.dpad_down) {
+                y -= 1;
+            }
+            if (gamepad1.dpad_up) {
+                y += 1;
+            }
+            if (gamepad1.dpad_left) {
+                x -= 1;
+            }
+            if (gamepad1.dpad_right) {
+                x += 1;
+            }
+            double angle = Math.PI / 4.0; // we want it rotated by 45 deg so that we can line up the shot easier
+            driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
+        }
     }
 
-    private void driving(double x, double y, double rot){
+    private void driving(double x, double y, double rot) {
         double lf_power = y + x + rot;
         double rf_power = y - x - rot;
         double lb_power = y - x + rot;
