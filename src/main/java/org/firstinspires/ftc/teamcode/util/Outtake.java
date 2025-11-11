@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.util;
 import com.qualcomm.robotcore.hardware.*;
 public class Outtake {
 
-    private DcMotor LeftMotor, RightMotor;
+    private final DcMotor LeftMotor;
+    private final DcMotor RightMotor;
     public Outtake(HardwareMap hardwareMap) {
         LeftMotor = hardwareMap.get(DcMotor.class,"leftOuttakeMotor");
         RightMotor = hardwareMap.get(DcMotor.class,"rightOuttakeMotor");

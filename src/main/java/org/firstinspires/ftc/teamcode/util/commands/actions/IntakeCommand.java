@@ -5,9 +5,9 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class IntakeCommand implements Command {
 
-    private TimerCommand timeout_seconds;
-    private double power;
-    private Robot robot;
+    private final TimerCommand timeout_seconds;
+    private final double power;
+    private final Robot robot;
 
     public IntakeCommand(double timeout_seconds, double power, Robot robot) {
         this.robot = robot;

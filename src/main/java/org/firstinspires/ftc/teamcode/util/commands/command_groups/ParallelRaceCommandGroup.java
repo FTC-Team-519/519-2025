@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.util.commands.command_groups;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class ParallelRaceCommandGroup implements Command{
-    private Command[] commands;
+    private final Command[] commands;
     private boolean finished;
 
     public ParallelRaceCommandGroup(Command... commands){

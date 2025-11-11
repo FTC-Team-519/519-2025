@@ -9,7 +9,7 @@ import static java.lang.Math.abs;
 @TeleOp(name="BasicOpMode",group="")
 public class BasicOpMode extends LinearOpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
     private Robot robot;
 
     @Override

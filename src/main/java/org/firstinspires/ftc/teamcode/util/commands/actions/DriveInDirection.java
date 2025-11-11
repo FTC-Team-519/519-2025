@@ -7,11 +7,11 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 //the distance that the motors report they have driven might not be the actual amount we have driven due to slippage
 //I am not sure if this will drive exactly the prescribed amount so we will need to test it out
 public class DriveInDirection implements Command {
-    private double distance;
+    private final double distance;
 
     //from 0 to 2PI
-    private double direction;
-    private Robot robot;
+    private final double direction;
+    private final Robot robot;
 
     public DriveInDirection(double inches, double direction, Robot robot) {
         this.direction = direction % (Math.PI * 2);

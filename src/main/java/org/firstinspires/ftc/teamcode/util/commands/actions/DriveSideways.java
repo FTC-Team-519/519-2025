@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class DriveSideways implements Command {
-    private double distance;
-    private Robot robot;
+    private final double distance;
+    private final Robot robot;
 
     //drive left is Negative <- mathew said this after he was wrong the first time
     public DriveSideways(double inches, Robot robot) {

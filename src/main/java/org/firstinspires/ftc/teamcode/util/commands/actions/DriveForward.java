@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 // Uses encoders
 public class DriveForward implements Command {
-    private double distance;
-    private Robot robot;
+    private final double distance;
+    private final Robot robot;
 
     public DriveForward(double inches, Robot robot) {
         distance = inches*Robot.getCountsPerInchForDriveMotors();

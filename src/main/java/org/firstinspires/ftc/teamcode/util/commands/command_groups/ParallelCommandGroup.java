@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.util.commands.command_groups;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class ParallelCommandGroup implements Command {
-    private Command[] commands;
-    private boolean[] completed;
+    private final Command[] commands;
+    private final boolean[] completed;
 
     public ParallelCommandGroup(Command... commands){
         this.commands = commands;

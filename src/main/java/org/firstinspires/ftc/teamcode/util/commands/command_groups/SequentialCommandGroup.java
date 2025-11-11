@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 //Will take commands and run them sequentially until all of them are finished
 public class SequentialCommandGroup implements Command {
-    private Command[] commands;
+    private final Command[] commands;
     private int current_command;
 
     public SequentialCommandGroup(Command... commands){

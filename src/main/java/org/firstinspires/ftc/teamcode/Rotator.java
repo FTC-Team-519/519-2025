@@ -16,7 +16,7 @@ public class Rotator {
 
     private boolean clockwise = true;
 
-    private pieceType[] currentArtifacts = new pieceType[3];
+    private final pieceType[] currentArtifacts = new pieceType[3];
 
     private int currentPosition = 0;
 
