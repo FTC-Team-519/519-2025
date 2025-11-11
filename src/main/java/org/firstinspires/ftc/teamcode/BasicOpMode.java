@@ -71,6 +71,7 @@ public class BasicOpMode extends LinearOpMode {
             else if(!gamepad1.a && aPressed) {
                 aPressed = false;
             }
+            //couldn't you just use gamepad1.aWasReleased() or gamepad1.aWasPressed()
 
             if(gamepad2.b) {
                 robot.BLASTTTTTTTTT();
