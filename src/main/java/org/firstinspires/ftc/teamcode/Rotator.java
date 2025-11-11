@@ -93,8 +93,10 @@ public class Rotator {
         return currentArtifacts;
     }
 
-    public boolean doesIntakeContainPiece(double visibleDistance) {
-        return(colorSensor.getDistance(DistanceUnit.INCH)<visibleDistance);
+
+    // this color sensor is placed at the intake (assumption)
+    public boolean doesIntakeContainPiece(double visibleDistanceInches) {
+        return(colorSensor.getDistance(DistanceUnit.INCH)<visibleDistanceInches);
     }
 
     public float[] getCurrentHSV() {

@@ -9,6 +9,11 @@ public class Robot {
     private final DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
 
     IMU imu;
+
+    public Rotator getRotator() {
+        return rotator;
+    }
+
     private final Rotator rotator;
 
     private final Outtake outtake;
