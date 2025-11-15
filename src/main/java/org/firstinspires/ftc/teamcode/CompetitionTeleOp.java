@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.util.OpModeBase;
 @TeleOp(name = "Competition TeleOp")
 public class CompetitionTeleOp extends OpModeBase {
     private boolean driving_field_centric = false;
+    private boolean rotating_left = false;
+    private boolean rotating_at_all = false;
 
     @Override
     public void init() {
@@ -25,10 +27,14 @@ public class CompetitionTeleOp extends OpModeBase {
 
         //rotating the disk
         if (gamepad1.leftBumperWasReleased()){
-            //rotate left
+            //clockwise
+            robot.getRotator().rotateDisk(true);
         }else if(gamepad1.rightBumperWasReleased()){
-            //rotate right
+            //counter clock wise
+            robot.getRotator().rotateDisk(false);
         }
+
+
 
         //regular driving
         if (driving_field_centric) {

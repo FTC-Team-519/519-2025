@@ -43,10 +43,10 @@ public class Rotator {
 
     public boolean fixCurrentArtifacts(pieceType[] motif) {
         if(!Arrays.equals(currentArtifacts, motif)) {
-            if(Arrays.equals(motif,rotate(currentArtifacts))) {
+            if(Arrays.equals(motif,rotatePieceArray(currentArtifacts))) {
                 setToPosition(motor.getCurrentPosition()+ getEncoderClicksPerRotation()/3);
                 return true;
-            } else if(Arrays.equals(motif,rotate(rotate(currentArtifacts)))) {
+            } else if(Arrays.equals(motif,rotatePieceArray(rotatePieceArray(currentArtifacts)))) {
                 setToPosition(motor.getCurrentPosition()- getEncoderClicksPerRotation()/3);
                 return true;
             }
@@ -56,7 +56,7 @@ public class Rotator {
         return false;
     }
 
-    public pieceType[] rotate(pieceType[] orig) {
+    public pieceType[] rotatePieceArray(pieceType[] orig) {
         pieceType[] ans = new pieceType[3];
         ans[0] = orig[2];
         ans[1] = orig[0];
@@ -141,7 +141,7 @@ public class Rotator {
                 break;
             case RUN_TO_POSITION:
                 motor.setPower(1.0d);
-                if(motor.getCurrentPosition()==motor.getTargetPosition()) {
+                if(Math.abs(motor.getCurrentPosition()) > Math.abs(motor.getTargetPosition())) {
                     setToPower();
                 }
                 break;
@@ -163,12 +163,16 @@ public class Rotator {
     public void setToConstant(boolean goRight) {
         clockwise = goRight;
         turnMode = turnModes.CONSTANT_MOVEMENT;
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void setToPosition(double target) {
         turnMode = turnModes.RUN_TO_POSITION;
         motor.setTargetPosition((int)target);
+        if (motor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
@@ -177,4 +181,9 @@ public class Rotator {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void rotateDisk(boolean rotate_clock){
+        setToPosition(motor.getCurrentPosition() + (rotate_clock?1:-1) * getEncoderClicksPerRotation()/3);
+        // we need to test whether rotating clockwise or counterclockwise is positive or negative
+        runMotor(); // will automatically stop b\c we are on RUN_USING_ENCODER
+    }
 }
