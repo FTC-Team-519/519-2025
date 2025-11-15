@@ -97,7 +97,7 @@ public class BasicOpMode extends LinearOpMode {
             telemetry.addData("Hue Value",robot.getHueValue());
             float[] hsv = robot.getHSV();
             telemetry.addData("HSV Values",hsv[0] + " " + hsv[1] + " " + hsv[2] );
-            double[] rgb = robot.getRGB();
+            int[] rgb = robot.getRGB();
             telemetry.addData("RGB Values",rgb[0] + " " + rgb[1] + " " + rgb[2]);
             telemetry.addData("Alpha Value",robot.getAlpha());
             telemetry.addData("Piece Color",robot.pieceType());

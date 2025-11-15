@@ -41,7 +41,7 @@ public class Robot {
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rotator.getMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotator.setToPower();
+        rotator.resetEncoder();
 
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD)));
@@ -160,7 +160,7 @@ public class Robot {
         return rotator.getCurrentHSV();
     }
 
-    public double[] getRGB() {
+    public int[] getRGB() {
         return rotator.getCurrentRGB();
     }
 
