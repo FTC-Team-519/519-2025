@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.util.RobotMath;
 
 import java.util.Arrays;
 
@@ -12,6 +13,8 @@ public class Rotator {
     public final double GEAR_RATIO = 2.0;
     public final double PRECISION = 50; //unit is clicks
     //might need to tweak
+
+    public final double MAX_SPEED = 0.5;
 
     private final DcMotor motor;
     private final ColorRangeSensor colorSensor1;
@@ -148,7 +151,8 @@ public class Rotator {
     }
 
     public void runMotor(double power) {
-        motor.setPower(power);
+
+        motor.setPower(RobotMath.clamp(power, -MAX_SPEED, MAX_SPEED));
     }
 
     //needs to be called continually every loop
