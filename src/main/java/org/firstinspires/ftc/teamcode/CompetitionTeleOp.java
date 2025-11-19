@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.util.OpModeBase;
 @TeleOp(name = "Competition TeleOp")
 public class CompetitionTeleOp extends OpModeBase {
     private boolean driving_field_centric = false;
+    private boolean rotating_at_all = false;
+    private boolean manual_adjustment = false;
 
     @Override
     public void init() {
@@ -23,12 +25,40 @@ public class CompetitionTeleOp extends OpModeBase {
         //intake
         robot.runIntake(gamepad1.right_trigger);
 
-        //rotating the disk
+        //rotating
+
+        robot.getRotator().runMotor(0.0);
+
+        //rotating the disk to a specific position
         if (gamepad1.leftBumperWasReleased()){
-            //rotate left
+            //clockwise
+            robot.getRotator().setDiskRotation(true);
+            rotating_at_all = true;
         }else if(gamepad1.rightBumperWasReleased()){
-            //rotate right
+            //counter clock wise
+            robot.getRotator().setDiskRotation(false);
+            rotating_at_all = true;
         }
+        if (rotating_at_all){
+            robot.getRotator().runMotorToPosition(1.0);
+            if (robot.getRotator().isAtPosition()){
+                rotating_at_all = false;
+            }
+        }
+
+        //manual rotation
+        if (gamepad1.left_trigger != 0 || gamepad2.right_trigger != 0){
+            rotating_at_all = false;
+            manual_adjustment = true;
+            robot.getRotator().runMotor(gamepad1.left_trigger - gamepad2.right_trigger);
+        }
+        //if we are no longer doing manual input, but we were previously
+        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && manual_adjustment){
+            manual_adjustment = false;
+            robot.getRotator().resetEncoder();
+        }
+
+
 
         //regular driving
         if (driving_field_centric) {

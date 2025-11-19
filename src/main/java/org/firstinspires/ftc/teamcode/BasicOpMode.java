@@ -71,6 +71,7 @@ public class BasicOpMode extends LinearOpMode {
             else if(!gamepad1.a && aPressed) {
                 aPressed = false;
             }
+            //couldn't you just use gamepad1.aWasReleased() or gamepad1.aWasPressed()
 
             if(gamepad2.b) {
                 robot.BLASTTTTTTTTT();
@@ -96,7 +97,7 @@ public class BasicOpMode extends LinearOpMode {
             telemetry.addData("Hue Value",robot.getHueValue());
             float[] hsv = robot.getHSV();
             telemetry.addData("HSV Values",hsv[0] + " " + hsv[1] + " " + hsv[2] );
-            double[] rgb = robot.getRGB();
+            int[] rgb = robot.getRGB();
             telemetry.addData("RGB Values",rgb[0] + " " + rgb[1] + " " + rgb[2]);
             telemetry.addData("Alpha Value",robot.getAlpha());
             telemetry.addData("Piece Color",robot.pieceType());
