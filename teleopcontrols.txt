@@ -1,0 +1,55 @@
+Controler 1:
+
+drive
+L stick - drive
+R stick - rotate
+X button - ball intake
+Y - ball output
+LB RB - Rotate tray clockwise and counter clockwise
+triggers LT RT - for fine adjustment clockwise and counter clockwise.
+
+
+player 1 (subject to change)
+
+
+potential binds
+L stick - drive
+R stick - rotate
+A button - ball intake
+X button - Emergency rotate
+
+if wanted
+D pad - down auto align
+
+
+Drive: using the left joysticks to drive the bot forward left right and back, use the right joystick to rotate the robot clockwise and counter clockwise
+
+intake: rotate spinner to empty spot, toggle intake on (if possible turn off once all ball are detected and wait for next input)
+
+Auto align shooter to goal
+
+Emergency rotate: a button (Unknown) that will rotate the ball trey to the next ball slot (120 degrees ish) to adjust the color of ball being fired.
+
+player 2  (subject to change)
+
+
+
+
+potential binds
+Y button - shooter
+B button - feed servo
+LB+D pad right - zero all motors and servos involved with the shooter
+LT+D pad right - Zero all motors involved with the intake and trey
+
+Shooter: [on a joystick for ease of speed control] push the joystick forward to spin the black shooter wheels (pushing the stick a little bit for low speed and fill push for high speed)
+or four different buttons for speeds like 25% 50% 75% and 100% but that might be too difficult to use effectively.
+shooter: rotate spinner to next filled spot (color), spin up fly wheels to variable speed depending on distance, move servo to second (shooting position), the back to stored position
+
+feeding servo: a button (Unknown) will start the motor with the green feed wheel [now referred to as the feed motor] while the servo underneath rotates the feed motor into shooting position.
+pressing a button (either the same button or a different one) will turn the feed motor off and will rotate the feed motor out of the way for the balls to rotate.
+
+
+
+
+
+
