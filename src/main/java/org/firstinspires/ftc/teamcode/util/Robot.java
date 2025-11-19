@@ -175,10 +175,17 @@ public class Robot {
     public void engageDisengageKicker(boolean goingBack) {
         kicker.runEngager(goingBack);
     }
-
     public void getReadyToKick() {
         kicker.runEngager(false);
-        kicker.runRotator(1.0d); // FIXME: Get a good speed
+        kicker.runRotator(0.5d); // FIXME: Get a good speed
+    }
+
+    public void changeKicking() {
+        if(kicker.isGoing()) {
+            stopKicking();
+        } else {
+            getReadyToKick();
+        }
     }
 
     public void stopKicking() {

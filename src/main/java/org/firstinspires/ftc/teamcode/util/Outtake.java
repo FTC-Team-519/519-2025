@@ -20,8 +20,8 @@ public class Outtake {
     public DcMotor getRightMotor() {return RightMotor;}
 
     public void runMotors(double power) {
-        LeftMotor.setPower(power/2);
-        RightMotor.setPower(power/2);
+        LeftMotor.setPower(power);
+        RightMotor.setPower(power);
     }
 
 
