@@ -20,8 +20,6 @@ public class Rotator {
     private final ColorRangeSensor colorSensor1;
     private final ColorRangeSensor colorSensor2;
 
-    private boolean clockwise = true;
-
     private final pieceType[] currentArtifacts = new pieceType[3];
 
     private int currentPosition = 0;
