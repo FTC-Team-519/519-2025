@@ -16,6 +16,10 @@ public class Robot {
 
     private final Rotator rotator;
 
+    public Outtake getOuttake() {
+        return outtake;
+    }
+
     private final Outtake outtake;
 
     private final Kicker kicker;

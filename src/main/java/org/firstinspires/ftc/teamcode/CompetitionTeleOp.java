@@ -18,14 +18,14 @@ public class CompetitionTeleOp extends OpModeBase {
 
     @Override
     public void loop() {
-        //TODO: add kicker moving
-
 
         //outtake flywheels
         robot.runOuttake(-gamepad2.left_stick_y);
 
         //kicker
-        robot.getReadyToKick();
+        if(gamepad2.aWasPressed()) {
+            robot.engageDisengageKicker();
+        }
 
 
         //intake
@@ -35,11 +35,11 @@ public class CompetitionTeleOp extends OpModeBase {
         robot.getRotator().runMotor(0.0);
 
         //rotating the disk to a specific position
-        if (gamepad2.leftBumperWasReleased()){
+        if (gamepad1.leftBumperWasReleased()){
             //clockwise
             robot.getRotator().setDiskRotation(true);
             rotating_at_all = true;
-        }else if(gamepad2.rightBumperWasReleased()){
+        }else if(gamepad1.rightBumperWasReleased()){
             //counter clock wise
             robot.getRotator().setDiskRotation(false);
             rotating_at_all = true;
@@ -52,13 +52,13 @@ public class CompetitionTeleOp extends OpModeBase {
         }
 
         //manual rotation
-        if (gamepad2.left_trigger != 0 || gamepad2.right_trigger != 0){
+        if (gamepad1.left_trigger != 0 || gamepad1.right_trigger != 0){
             rotating_at_all = false;
             manual_adjustment = true;
-            robot.getRotator().runMotor(gamepad1.left_trigger - gamepad2.right_trigger);
+            robot.getRotator().runMotor(gamepad1.left_trigger - gamepad1.right_trigger);
         }
         //if we are no longer doing manual input, but we were previously
-        if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0 && manual_adjustment){
+        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && manual_adjustment){
             manual_adjustment = false;
             robot.getRotator().resetEncoder();
         }
@@ -97,6 +97,9 @@ public class CompetitionTeleOp extends OpModeBase {
             double angle = Math.PI / 4.0; // we want it rotated by 45 deg so that we can line up the shot easier
             driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
+
+        //telemetry
+        telemetry();
     }
 
     private void driving(double x, double y, double rot) {
@@ -116,5 +119,13 @@ public class CompetitionTeleOp extends OpModeBase {
         robot.setRightFrontPower(rf_power);
         robot.setLeftBackPower(lb_power);
         robot.setRightBackPower(rb_power);
+    }
+
+
+    private void telemetry(){
+        telemetry.addData("Field Centric:", driving_field_centric);
+        telemetry.addData("manually_adjusting_disk", manual_adjustment);
+        telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
+        telemetry.update();
     }
 }
