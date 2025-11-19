@@ -1,0 +1,20 @@
+Control Hub
+    Motors
+        0 - rightFront
+        1 - rightBack
+        2 - leftBack
+        3 - leftFront
+    Servos
+        0 - kickerEngager
+        1 - kickerRotator
+    I2C
+        0 - IMU
+        1 - colorSensor1
+        2 - colorSensor2
+
+Expansion Hub
+    Motors
+        0 - intakeMotor
+        1 - rotatorMotor
+        2 - leftOuttakeMotor
+        3 - rightOuttakeMotor
