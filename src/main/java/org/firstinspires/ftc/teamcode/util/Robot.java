@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.util;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.IntakeColorSensor;
-import org.firstinspires.ftc.teamcode.Rotator;
+import org.firstinspires.ftc.teamcode.IntakeColorSensor.*;
+import org.firstinspires.ftc.teamcode.util.Rotator;
 
 public class Robot {
     private final DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
@@ -16,6 +16,8 @@ public class Robot {
     }
 
     private final Rotator rotator;
+
+    private final RobotCamera camera;
 
     public Outtake getOuttake() {
         return outtake;
@@ -35,6 +37,7 @@ public class Robot {
         outtake = new Outtake(hardwareMap);
         rotator = new Rotator(hardwareMap);
         kicker = new Kicker(hardwareMap);
+        camera = new RobotCamera(hardwareMap);
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -59,6 +62,14 @@ public class Robot {
     }
 
     public double distanceFromPiece() {return rotator.distance();}
+
+    public double[] getDistancesFromAprilTag() {return camera.distances();}
+
+    public int[] getIds() {return camera.getIDs();}
+
+    public void stopStreaming() {camera.stopStreaming();}
+
+    public void resumeStreaming() {camera.resumeStreaming();}
 
     public DcMotor getIntakeMotor() {
         return intakeMotor;
@@ -88,12 +99,16 @@ public class Robot {
         rotator.updateCurrentArtifacts();
     }
 
-    public boolean fixRotatorArtifacts(IntakeColorSensor.pieceType[] motif) {
+    public boolean fixRotatorArtifacts(pieceType[] motif) {
         return rotator.fixCurrentArtifacts(motif);
     }
 
-    public IntakeColorSensor.pieceType[] currentRotatorArtifacts() {
+    public pieceType[] currentRotatorArtifacts() {
         return rotator.getCurrentArtifacts();
+    }
+
+    public int getRotatorEncoderPosition() {
+        return rotator.getEncoderPosition();
     }
 
     public int getRotatorPosition() {
@@ -127,7 +142,7 @@ public class Robot {
         return pieceType(getPieceType());
     }
 
-    public String pieceType(IntakeColorSensor.pieceType p) {
+    public String pieceType(pieceType p) {
         switch(p) {
             case NOT_THERE:
                 return "Not there";
@@ -142,7 +157,7 @@ public class Robot {
 
     public String piecesIn() {
         String ans = "";
-        for(IntakeColorSensor.pieceType p: currentRotatorArtifacts()) {
+        for(pieceType p: currentRotatorArtifacts()) {
             if(p!=null) {
                 ans += pieceType(p) + " ";
             } else {
@@ -152,7 +167,7 @@ public class Robot {
         return ans;
     }
 
-    public IntakeColorSensor.pieceType getPieceType() {
+    public pieceType getPieceType() {
         return rotator.getPieceColor();
     }
 

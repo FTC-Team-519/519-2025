@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
+import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -10,7 +11,18 @@ public class IntakeColorSensor {
     public enum pieceType {
         NOT_THERE,
         GREEN,
-        PURPLE
+        PURPLE;
+
+        public String toString() {
+            if (this == NOT_THERE){
+                return "not there";
+            } else if (this == GREEN) {
+                return "green";
+            }else if (this == PURPLE) {
+                return "purple";
+            }
+            return "null";
+        }
     }
 
     private final ColorRangeSensor colorSensor;
@@ -43,7 +55,7 @@ public class IntakeColorSensor {
         if (get_distance_inch() < (5.0)) {
             return IntakeColorSensor.pieceType.NOT_THERE;
         } else if (get_hsv()[1] < 10) { // we see white
-            return null;
+            return pieceType.NOT_THERE;
         } else if (get_hsv()[0] > 160) {
             return IntakeColorSensor.pieceType.GREEN;
         } else {

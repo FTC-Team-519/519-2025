@@ -4,12 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
+import org.firstinspires.ftc.teamcode.util.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import java.util.Arrays;
 
 @TeleOp(name = "Competition TeleOp")
 public class CompetitionTeleOp extends OpModeBase {
@@ -52,6 +55,8 @@ public class CompetitionTeleOp extends OpModeBase {
 
 
     public void manual_controls() {
+        camera();
+
         //outtake flywheels
         outtake();
 
@@ -71,6 +76,15 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry();
     }
 
+    private void camera(){
+        //save cpu using camera
+        if(gamepad2.leftBumperWasPressed()) {
+            robot.stopStreaming();
+        } else if(gamepad2.rightBumperWasPressed()) {
+            robot.resumeStreaming();
+        }
+    }
+
     private void outtake(){
         if (gamepad2.dpadUpWasReleased()) {
             outtake_power += 0.02;
@@ -79,10 +93,10 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad2.dpadDownWasReleased()) {
             outtake_power -= 0.02;
         }
-        if (gamepad2.dpadLeftWasReleased()){
+        if (gamepad2.xWasReleased()){
             outtake_power = 0.0;
         }
-        if(gamepad2.dpadRightWasReleased()){
+        if(gamepad2.yWasReleased()){
             outtake_power = 1.0;
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
@@ -109,7 +123,7 @@ public class CompetitionTeleOp extends OpModeBase {
         }
         if (rotating_at_all) {
             setting_rotation = true;
-            robot.getRotator().runMotorToPosition(1.0);
+            robot.getRotator().runMotorToPosition(0.3);
             if (robot.getRotator().isAtPosition()) {
                 rotating_at_all = false;
             }
@@ -209,11 +223,30 @@ public class CompetitionTeleOp extends OpModeBase {
 
 
     private void telemetry() {
+
+        double[] distanceArray = robot.getDistancesFromAprilTag();
+
+        telemetry.addData("X Offset",distanceArray[0]);
+        telemetry.addData("Y Offset",distanceArray[1]);
+        telemetry.addData("Z Offset",distanceArray[2]);
+        telemetry.addData("Yaw",distanceArray[3]);
+
+        telemetry.addData("AprilTag Ids found", Arrays.toString(robot.getIds()));
+
         telemetry.addData("Field Centric:", driving_field_centric);
         telemetry.addData("manually_adjusting_disk:", manual_adjustment);
         telemetry.addData("rotating disk:", rotating_at_all);
         telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
-        telemetry.addData("sensing:", robot.getRotator().getPieceColor());
+        try{
+            //if (robot.getRotator().getPieceColor() != null) {
+                telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
+            //}
+        } catch (NullPointerException ignored){
+
+        }
+        telemetry.addData("current disk pos: ", robot.getRotator().getEncoderPosition());
+        telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
+        telemetry.addData("current disk pos(normalized): ", robot.getRotator().getEncoderPosition()/(double) Rotator.CLICKS_PER_ROTATION);
         telemetry.update();
     }
 }
