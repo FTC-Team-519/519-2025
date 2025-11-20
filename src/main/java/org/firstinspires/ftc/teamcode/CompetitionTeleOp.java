@@ -4,6 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
+import org.firstinspires.ftc.teamcode.util.commands.Command;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 @TeleOp(name = "Competition TeleOp")
 public class CompetitionTeleOp extends OpModeBase {
@@ -13,6 +19,8 @@ public class CompetitionTeleOp extends OpModeBase {
     private boolean intaking = false;
     private double outtake_power = 0.0;
 
+    private Queue<Command> commands_to_run = new LinkedList<>();
+
     @Override
     public void init() {
         super.init();
@@ -20,10 +28,50 @@ public class CompetitionTeleOp extends OpModeBase {
     }
 
     //FIXME: follow the specification in teleopcontrols.txt
-    @Override
-    public void loop() {
+    public void loop(){
+        if (gamepad2.aWasReleased()){
+            commands_to_run = new LinkedList<>(); //clear the entire list
+        }
 
+        if (!commands_to_run.isEmpty()){
+            Command command = commands_to_run.peek();
+            assert command != null;
+            command.run();
+            if (command.isDone()){
+                command.shutdown();
+                commands_to_run.remove();
+                Command next_command = commands_to_run.peek();
+                if (next_command != null) {
+                    next_command.init();
+                }
+            }
+        }else{
+            manual_controls();
+        }
+    }
+
+
+    public void manual_controls() {
         //outtake flywheels
+        outtake();
+
+        //kicker
+        kicking();
+
+        //rotating
+        rotating();
+
+        //intake
+        intake();
+
+        //driving
+        driving();
+
+        //telemetry
+        telemetry();
+    }
+
+    private void outtake(){
         if (gamepad2.dpadUpWasReleased()) {
             outtake_power += 0.02;
         }
@@ -39,13 +87,15 @@ public class CompetitionTeleOp extends OpModeBase {
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
+    }
 
-        //kicker
+    private void kicking(){
         if (gamepad2.aWasPressed()) {
             robot.changeKicking();
         }
+    }
 
-        //rotating
+    private void rotating(){
         boolean setting_rotation = false;
         //rotating the disk to a specific position
         if (gamepad1.leftBumperWasReleased()) {
@@ -82,8 +132,9 @@ public class CompetitionTeleOp extends OpModeBase {
         if (!setting_rotation) {
             robot.getRotator().runMotor(0.0);
         }
+    }
 
-        //intake
+    private void intake(){
         if (gamepad1.bWasReleased()) {
             intaking = !intaking;
         }
@@ -92,8 +143,9 @@ public class CompetitionTeleOp extends OpModeBase {
         } else {
             robot.runIntake(0.0);
         }
+    }
 
-        //driving
+    private void driving(){
         if (gamepad1.aWasReleased()) {
             driving_field_centric = !driving_field_centric;
             robot.resetYaw();
@@ -108,9 +160,9 @@ public class CompetitionTeleOp extends OpModeBase {
             double robot_angle = robot.getYaw() * Math.PI / 180.0;
             double angle = drive_angle - robot_angle;
 
-            driving(mag * Math.cos(angle), mag * Math.sin(angle), gamepad1.right_stick_x);
+            raw_driving(mag * Math.cos(angle), mag * Math.sin(angle), gamepad1.right_stick_x);
         } else {
-            driving(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            raw_driving(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
 
         //we want regular driving to be overwritten by dpad driving
@@ -130,14 +182,11 @@ public class CompetitionTeleOp extends OpModeBase {
                 x += 1;
             }
             double angle = -3.0 * Math.PI / 4.0; // we want it rotated by 45 deg so that we can line up the shot easier
-            driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
+            raw_driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
-
-        //telemetry
-        telemetry();
     }
 
-    private void driving(double x, double y, double rot) {
+    private void raw_driving(double x, double y, double rot) {
         double lf_power = y + x + rot;
         double rf_power = y - x - rot;
         double lb_power = y - x + rot;
