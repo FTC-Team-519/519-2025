@@ -12,7 +12,7 @@ public class Rotator {
     public final double CLICKS_PER_ROTATION = 751.8;
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
-    public final double PRECISION = 15; //unit is clicks
+    public final double PRECISION = 22; //unit is clicks
     public static final double MAX_SPEED = 0.5;
 
     private final DcMotor motor;
