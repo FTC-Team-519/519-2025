@@ -11,9 +11,8 @@ public class Rotator {
 
     public final double CLICKS_PER_ROTATION = 751.8;
     public final double GEAR_RATIO = 2.0;
-    public final double PRECISION = 25; //unit is clicks
     //might need to tweak
-
+    public final double PRECISION = 10; //unit is clicks
     public static final double MAX_SPEED = 0.5;
 
     private final DcMotor motor;
@@ -155,6 +154,9 @@ public class Rotator {
 
     //needs to be called continually every loop
     public void runMotorToPosition(double power) {
+        if (Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) < 100){
+            power *= 0.5;
+        }
         if (isAtPosition()) {
             runMotor(0.0);
         } else if (motor.getCurrentPosition() > motor.getTargetPosition()) {
