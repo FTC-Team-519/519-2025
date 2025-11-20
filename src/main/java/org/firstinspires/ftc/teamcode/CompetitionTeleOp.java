@@ -18,17 +18,24 @@ public class CompetitionTeleOp extends OpModeBase {
         super.init();
 
     }
+
     //FIXME: follow the specification in teleopcontrols.txt
     @Override
     public void loop() {
 
         //outtake flywheels
-        if (gamepad2.dpad_up){
-            outtake_power += 0.1;
+        if (gamepad2.dpadUpWasReleased()) {
+            outtake_power += 0.02;
         }
 
-        if (gamepad2.dpad_down){
-            outtake_power -= 0.1;
+        if (gamepad2.dpadDownWasReleased()) {
+            outtake_power -= 0.02;
+        }
+        if (gamepad2.dpadLeftWasReleased()){
+            outtake_power = 0.0;
+        }
+        if(gamepad2.dpadRightWasReleased()){
+            outtake_power = 1.0;
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
@@ -72,12 +79,12 @@ public class CompetitionTeleOp extends OpModeBase {
             robot.getRotator().resetEncoder();
         }
 
-        if (!setting_rotation){
+        if (!setting_rotation) {
             robot.getRotator().runMotor(0.0);
         }
 
         //intake
-        if (gamepad1.bWasReleased()){
+        if (gamepad1.bWasReleased()) {
             intaking = !intaking;
         }
         if (intaking) {
@@ -96,8 +103,12 @@ public class CompetitionTeleOp extends OpModeBase {
         if (driving_field_centric) {
             double x = gamepad1.left_stick_x;
             double y = -gamepad1.left_stick_y;
-            double angle = robot.getYaw() * Math.PI / 180.0;
-            driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), gamepad1.right_stick_x);
+            double mag = Math.hypot(x, y);
+            double drive_angle = Math.atan2(y, x);
+            double robot_angle = robot.getYaw() * Math.PI / 180.0;
+            double angle = drive_angle - robot_angle;
+
+            driving(mag * Math.cos(angle), mag * Math.sin(angle), gamepad1.right_stick_x);
         } else {
             driving(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
@@ -118,7 +129,7 @@ public class CompetitionTeleOp extends OpModeBase {
             if (gamepad1.dpad_right) {
                 x += 1;
             }
-            double angle = -Math.PI / 4.0; // we want it rotated by 45 deg so that we can line up the shot easier
+            double angle = -3.0 * Math.PI / 4.0; // we want it rotated by 45 deg so that we can line up the shot easier
             driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
 
@@ -134,10 +145,12 @@ public class CompetitionTeleOp extends OpModeBase {
 
         double scale = Math.abs(y) + Math.abs(x) + Math.abs(rot);
 
-        lf_power /= scale;
-        rf_power /= scale;
-        lb_power /= scale;
-        rb_power /= scale;
+        if (scale > 1.0) {
+            lf_power /= scale;
+            rf_power /= scale;
+            lb_power /= scale;
+            rb_power /= scale;
+        }
 
         robot.setLeftFrontPower(lf_power);
         robot.setRightFrontPower(rf_power);

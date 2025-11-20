@@ -181,9 +181,9 @@ public class Rotator {
         double sector_size = (getEncoderClicksPerRotation() / 3);
         double current_sector = (motor.getCurrentPosition() / sector_size);
         if (rotate_clock) {
-            motor.setTargetPosition((int) ((Math.floor(current_sector) + 1) * sector_size));
+            motor.setTargetPosition((int) ((Math.floor(current_sector) + 1 + PRECISION / sector_size) * sector_size));
         } else {
-            motor.setTargetPosition((int) ((Math.ceil(current_sector) - 1) * sector_size));
+            motor.setTargetPosition((int) ((Math.ceil(current_sector) - 1 - PRECISION / sector_size) * sector_size));
         }
         runMotor(); // will automatically stop b\c we are on RUN_USING_ENCODER
     }
