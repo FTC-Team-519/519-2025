@@ -18,10 +18,10 @@ public class BasicOpMode extends LinearOpMode {
         boolean a2Pressed = false;
 
         robot = new Robot(hardwareMap);
-        Rotator.pieceType[] motif = new Rotator.pieceType[3];
-        motif[0] = Rotator.pieceType.PURPLE;
-        motif[1] = Rotator.pieceType.GREEN;
-        motif[2] = Rotator.pieceType.PURPLE;
+        IntakeColorSensor.pieceType[] motif = new IntakeColorSensor.pieceType[3];
+        motif[0] = IntakeColorSensor.pieceType.PURPLE;
+        motif[1] = IntakeColorSensor.pieceType.GREEN;
+        motif[2] = IntakeColorSensor.pieceType.PURPLE;
 
         waitForStart();
         runtime.reset();
@@ -91,13 +91,6 @@ public class BasicOpMode extends LinearOpMode {
             }
 
             robot.runIntake(inPower);
-
-            telemetry.addData("Hue Value",robot.getHueValue());
-            float[] hsv = robot.getHSV();
-            telemetry.addData("HSV Values",hsv[0] + " " + hsv[1] + " " + hsv[2] );
-            int[] rgb = robot.getRGB();
-            telemetry.addData("RGB Values",rgb[0] + " " + rgb[1] + " " + rgb[2]);
-            telemetry.addData("Alpha Value",robot.getAlpha());
             telemetry.addData("Piece Color",robot.pieceType());
             telemetry.addData("Rotator Position",robot.getRotatorPosition());
             telemetry.addData("Intake Position",robot.getIntakeMotor().getCurrentPosition());

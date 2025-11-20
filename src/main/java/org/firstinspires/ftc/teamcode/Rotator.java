@@ -16,18 +16,13 @@ public class Rotator {
     public static final double MAX_SPEED = 0.5;
 
     private final DcMotor motor;
-    private final ColorRangeSensor colorSensor1;
-    private final ColorRangeSensor colorSensor2;
+    private final IntakeColorSensor colorSensor1;
+    private final IntakeColorSensor colorSensor2;
 
-    private final pieceType[] currentArtifacts = new pieceType[3];
+    private final IntakeColorSensor.pieceType[] currentArtifacts = new IntakeColorSensor.pieceType[3];
 
     private int currentPosition = 0;
 
-    public enum pieceType {
-        NOT_THERE,
-        GREEN,
-        PURPLE
-    }
 
     public void updateCurrentArtifacts() {
         if (getPosition() != currentPosition) {
@@ -37,7 +32,7 @@ public class Rotator {
     }
 
     //assuming proper alignment
-    public boolean fixCurrentArtifacts(pieceType[] motif) {
+    public boolean fixCurrentArtifacts(IntakeColorSensor.pieceType[] motif) {
         if (!Arrays.equals(currentArtifacts, motif)) {
             if (Arrays.equals(motif, rotatePieceArray(currentArtifacts))) {
                 motor.setTargetPosition((int) (motor.getCurrentPosition() + getEncoderClicksPerRotation() / 3));
@@ -52,15 +47,15 @@ public class Rotator {
         return false;
     }
 
-    public pieceType[] rotatePieceArray(pieceType[] orig) {
-        pieceType[] ans = new pieceType[3];
+    public IntakeColorSensor.pieceType[] rotatePieceArray(IntakeColorSensor.pieceType[] orig) {
+        IntakeColorSensor.pieceType[] ans = new IntakeColorSensor.pieceType[3];
         ans[0] = orig[2];
         ans[1] = orig[0];
         ans[2] = orig[1];
         return ans;
     }
 
-    public pieceType[] getCurrentArtifacts() {
+    public IntakeColorSensor.pieceType[] getCurrentArtifacts() {
         return currentArtifacts;
     }
 
@@ -70,64 +65,25 @@ public class Rotator {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setTargetPosition(0);
-        colorSensor1 = hardwareMap.get(ColorRangeSensor.class, "colorSensor1");
-        colorSensor2 = hardwareMap.get(ColorRangeSensor.class, "colorSensor2");
+        colorSensor1 = new IntakeColorSensor(hardwareMap,"colorSensor1");
+        colorSensor2 = new IntakeColorSensor(hardwareMap,"colorSensor2");
     }
 
-    public pieceType getPieceColor() {
-        if (!doesIntakeContainPiece(5.0)) {
-            return pieceType.NOT_THERE;
-        } else if (getCurrentHSV()[1] == 0) { // we see white
-            return null;
-        } else if (getCurrentHSV()[0] > 160) {
-            return pieceType.GREEN;
-        } else {
-            return pieceType.PURPLE;
-        }
+    public IntakeColorSensor.pieceType getPieceColor() {
+       return IntakeColorSensor.combine(colorSensor1.get_piece(), colorSensor2.get_piece());
     }
 
     public double distance() {
-        return Math.min(colorSensor1.getDistance(DistanceUnit.INCH), colorSensor1.getDistance(DistanceUnit.INCH));
+        return Math.min(colorSensor1.get_distance_inch(), colorSensor1.get_distance_inch());
     }
 
-    public pieceType[] getCurrentOrder() {
+    public IntakeColorSensor.pieceType[] getCurrentOrder() {
         return currentArtifacts;
     }
 
     public boolean doesIntakeContainPiece(double visibleDistanceInches) {
-        return (distance() < visibleDistanceInches);
+        return getPieceColor() != IntakeColorSensor.pieceType.NOT_THERE;
     }
-
-    public float[] getCurrentHSV() {
-        int[] rgb = getCurrentRGB();
-        return rgbToHSV(rgb[0], rgb[1], rgb[2]);
-    }
-
-    public int[] getCurrentRGB() {
-        int[] rgb = new int[3];
-        rgb[0] = colorSensor1.red();
-        rgb[1] = colorSensor1.blue();
-        rgb[2] = colorSensor1.green();
-        if (rgbToHSV(rgb[0], rgb[1], rgb[2])[1] == 0) { //color is white
-            rgb[0] = colorSensor2.red();
-            rgb[1] = colorSensor2.blue();
-            rgb[2] = colorSensor2.green();
-        }
-        return rgb;
-    }
-
-    public int getCurrentAlpha() {
-        int[] rgb = new int[3];
-        int alpha = colorSensor1.alpha();
-        rgb[0] = colorSensor1.red();
-        rgb[1] = colorSensor1.blue();
-        rgb[2] = colorSensor1.green();
-        if (rgbToHSV(rgb[0], rgb[1], rgb[2])[1] == 0) { //color is white
-            alpha = colorSensor2.alpha();
-        }
-        return alpha;
-    }
-
     public float[] rgbToHSV(int r, int g, int b) {
         float[] ret = new float[3];
         Color.RGBToHSV(r * 8, g * 8, b * 8, ret);

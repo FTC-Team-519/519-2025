@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.IntakeColorSensor;
 import org.firstinspires.ftc.teamcode.Rotator;
 
 public class Robot {
@@ -87,11 +88,11 @@ public class Robot {
         rotator.updateCurrentArtifacts();
     }
 
-    public boolean fixRotatorArtifacts(Rotator.pieceType[] motif) {
+    public boolean fixRotatorArtifacts(IntakeColorSensor.pieceType[] motif) {
         return rotator.fixCurrentArtifacts(motif);
     }
 
-    public Rotator.pieceType[] currentRotatorArtifacts() {
+    public IntakeColorSensor.pieceType[] currentRotatorArtifacts() {
         return rotator.getCurrentArtifacts();
     }
 
@@ -122,16 +123,11 @@ public class Robot {
             intakeMotor.setPower(0.0d);
         }
     }
-
-    public double getHueValue() {
-        return rotator.getCurrentHSV()[0];
-    }
-
     public String pieceType() {
         return pieceType(getPieceType());
     }
 
-    public String pieceType(Rotator.pieceType p) {
+    public String pieceType(IntakeColorSensor.pieceType p) {
         switch(p) {
             case NOT_THERE:
                 return "Not there";
@@ -146,7 +142,7 @@ public class Robot {
 
     public String piecesIn() {
         String ans = "";
-        for(Rotator.pieceType p: currentRotatorArtifacts()) {
+        for(IntakeColorSensor.pieceType p: currentRotatorArtifacts()) {
             if(p!=null) {
                 ans += pieceType(p) + " ";
             } else {
@@ -156,20 +152,8 @@ public class Robot {
         return ans;
     }
 
-    public Rotator.pieceType getPieceType() {
+    public IntakeColorSensor.pieceType getPieceType() {
         return rotator.getPieceColor();
-    }
-
-    public float[] getHSV() {
-        return rotator.getCurrentHSV();
-    }
-
-    public int[] getRGB() {
-        return rotator.getCurrentRGB();
-    }
-
-    public double getAlpha() {
-        return rotator.getCurrentAlpha();
     }
 
     public void engageDisengageKicker() {
