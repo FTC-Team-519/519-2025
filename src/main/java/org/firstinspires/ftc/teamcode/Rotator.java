@@ -11,10 +11,10 @@ public class Rotator {
 
     public final double CLICKS_PER_ROTATION = 751.8;
     public final double GEAR_RATIO = 2.0;
-    public final double PRECISION = 50; //unit is clicks
+    public final double PRECISION = 25; //unit is clicks
     //might need to tweak
 
-    public final double MAX_SPEED = 0.5;
+    public static final double MAX_SPEED = 0.5;
 
     private final DcMotor motor;
     private final ColorRangeSensor colorSensor1;
@@ -109,7 +109,7 @@ public class Rotator {
         rgb[0] = colorSensor1.red();
         rgb[1] = colorSensor1.blue();
         rgb[2] = colorSensor1.green();
-        if (rgbToHSV(rgb[0], rgb[1], rgb[2])[1] == 0){ //color is white
+        if (rgbToHSV(rgb[0], rgb[1], rgb[2])[1] == 0) { //color is white
             rgb[0] = colorSensor2.red();
             rgb[1] = colorSensor2.blue();
             rgb[2] = colorSensor2.green();
@@ -123,7 +123,7 @@ public class Rotator {
         rgb[0] = colorSensor1.red();
         rgb[1] = colorSensor1.blue();
         rgb[2] = colorSensor1.green();
-        if (rgbToHSV(rgb[0], rgb[1], rgb[2])[1] == 0){ //color is white
+        if (rgbToHSV(rgb[0], rgb[1], rgb[2])[1] == 0) { //color is white
             alpha = colorSensor2.alpha();
         }
         return alpha;
