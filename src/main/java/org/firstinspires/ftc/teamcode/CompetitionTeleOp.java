@@ -181,7 +181,7 @@ public class CompetitionTeleOp extends OpModeBase {
             if (gamepad1.dpad_right) {
                 x += 1;
             }
-            double angle = -3.0 * Math.PI / 4.0; // we want it rotated by 45 deg so that we can line up the shot easier
+            double angle = -3.0 * Math.PI / 4.0; // we want it rotated by 135 deg so that we can line up the shot easier
             raw_driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
     }
