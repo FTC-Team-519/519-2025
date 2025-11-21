@@ -21,10 +21,12 @@ public class RunKickerTeleOp extends LinearOpMode {
         runtime.reset();
 
         while(opModeIsActive()) {
-            if(gamepad1.a) {
+            if(gamepad1.aWasPressed()) {
                 engager.setPosition(0.75d);
-            } else {
+            } else if(gamepad1.aWasReleased()){
                 engager.setPosition(0.5d);
+            } else {
+                engager.setPosition(gamepad1.left_stick_y);
             }
         }
     }

@@ -22,6 +22,8 @@ public class CompetitionTeleOp extends OpModeBase {
     private boolean intaking = false;
     private double outtake_power = 0.0;
 
+    private boolean constant_rotation = false;
+
     private Queue<Command> commands_to_run = new LinkedList<>();
 
     @Override
@@ -34,6 +36,10 @@ public class CompetitionTeleOp extends OpModeBase {
     public void loop(){
         if (gamepad2.aWasReleased()){
             commands_to_run = new LinkedList<>(); //clear the entire list
+        }
+
+        if(gamepad1.yWasPressed()) {
+            constant_rotation = !constant_rotation;
         }
 
         if (!commands_to_run.isEmpty()){
@@ -145,6 +151,10 @@ public class CompetitionTeleOp extends OpModeBase {
 
         if (!setting_rotation) {
             robot.getRotator().runMotor(0.0);
+        }
+
+        if(constant_rotation) {
+            robot.getRotator().runMotor(-0.3);
         }
     }
 

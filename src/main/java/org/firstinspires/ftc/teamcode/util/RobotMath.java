@@ -66,4 +66,38 @@ public class RobotMath {
         }
         return output;
     }
+    /*
+        Returns a double array of length 4, with the values resolving to
+        the drive motor powers in the following order:
+        0: frontLeft
+        1: frontRight
+        2: backLeft
+        3: backRight
+     */
+    public static double[] motorPowers(double xOffset, double yaw) {
+        double[] ans = new double[4];
+
+        double fL = - xOffset - yaw;
+        double fR = xOffset + yaw;
+        double bL = xOffset - yaw;
+        double bR = - xOffset + yaw;
+
+        double max = Math.max(Math.abs(fL),Math.abs(fR));
+        max = Math.max(max,Math.abs(bL));
+        max = Math.max(max,Math.abs(bR));
+
+        if(max>1.0d) {
+            fL /= max;
+            fR /= max;
+            bL /= max;
+            bR /= max;
+        }
+
+        ans[0] = fL;
+        ans[1] = fR;
+        ans[2] = bL;
+        ans[3] = bR;
+
+        return ans;
+    }
 }
