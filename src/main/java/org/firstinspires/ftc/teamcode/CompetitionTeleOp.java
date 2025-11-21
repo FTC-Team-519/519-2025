@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import java.util.Arrays;
@@ -17,8 +14,8 @@ import java.util.Arrays;
 @TeleOp(name = "Competition TeleOp")
 public class CompetitionTeleOp extends OpModeBase {
     private boolean driving_field_centric = false;
-    private boolean rotating_at_all = false;
-    private boolean manual_adjustment = false;
+    private boolean is_auto_rotating = false;
+    private boolean is_manual_rotating = false;
     private boolean intaking = false;
     private double outtake_power = 0.0;
 
@@ -115,36 +112,41 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad1.leftBumperWasReleased()) {
             //clockwise
             robot.getRotator().setDiskRotation(true);
-            rotating_at_all = true;
+            is_auto_rotating = true;
         } else if (gamepad1.rightBumperWasReleased()) {
             //counter clock wise
             robot.getRotator().setDiskRotation(false);
-            rotating_at_all = true;
+            is_auto_rotating = true;
         }
-        if (rotating_at_all) {
+        if (is_auto_rotating) {
             setting_rotation = true;
             robot.getRotator().runMotorToPosition(0.3);
             if (robot.getRotator().isAtPosition()) {
-                rotating_at_all = false;
+                is_auto_rotating = false;
             }
         }
 
 
         //manual rotation
         if (gamepad1.left_trigger != 0 || gamepad1.right_trigger != 0) {
-            rotating_at_all = false;
-            manual_adjustment = true;
+            is_auto_rotating = false;
+            is_manual_rotating = true;
             setting_rotation = true;
             robot.getRotator().runMotor((gamepad1.left_trigger - gamepad1.right_trigger));//*Rotator.MAX_SPEED);
         }
         //if we are no longer doing manual input, but we were previously
-        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && manual_adjustment) {
-            manual_adjustment = false;
+        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && is_manual_rotating) {
+            is_manual_rotating = false;
             robot.getRotator().resetEncoder();
+            robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
         }
 
         if (!setting_rotation) {
             robot.getRotator().runMotor(0.0);
+        }
+
+        if (!robot.getRotator().isAtPosition() && !is_manual_rotating){
+            is_auto_rotating = true;
         }
     }
 
@@ -234,8 +236,8 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("AprilTag Ids found", Arrays.toString(robot.getIds()));
 
         telemetry.addData("Field Centric:", driving_field_centric);
-        telemetry.addData("manually_adjusting_disk:", manual_adjustment);
-        telemetry.addData("rotating disk:", rotating_at_all);
+        telemetry.addData("manually_adjusting_disk:", is_manual_rotating);
+        telemetry.addData("rotating disk:", is_auto_rotating);
         telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
         try{
             //if (robot.getRotator().getPieceColor() != null) {

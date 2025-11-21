@@ -12,7 +12,8 @@ public class Rotator {
     public static final double CLICKS_PER_ROTATION = 751.8;
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
-    public final double PRECISION = 10; //unit is clicks
+    public final double PRECISION = 20; //unit is clicks
+    public final double POWER_CUTTOFF = 0.05;
     public static final double MAX_SPEED = 0.5;
 
     private final DcMotor motor;
@@ -138,7 +139,7 @@ public class Rotator {
     }
 
     public boolean isAtPosition() {
-        return Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) < PRECISION;
+        return Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) < PRECISION && Math.abs(motor.getPower())<POWER_CUTTOFF;
     }
 
     public void resetEncoder() {
@@ -154,9 +155,9 @@ public class Rotator {
         double sector_size = (getEncoderClicksPerRotation() / 3);
         double current_sector = (motor.getCurrentPosition() / sector_size);
         if (rotate_clock) {
-            motor.setTargetPosition((int) ((Math.floor(current_sector) + 1 + PRECISION / sector_size) * sector_size));
+            motor.setTargetPosition((int) ((Math.floor(current_sector + PRECISION/ sector_size) + 1 ) * sector_size));
         } else {
-            motor.setTargetPosition((int) ((Math.ceil(current_sector) - 1 - PRECISION / sector_size) * sector_size));
+            motor.setTargetPosition((int) ((Math.ceil(current_sector - PRECISION/ sector_size) - 1 ) * sector_size));
         }
         runMotor(); // will automatically stop b\c we are on RUN_USING_ENCODER
     }
