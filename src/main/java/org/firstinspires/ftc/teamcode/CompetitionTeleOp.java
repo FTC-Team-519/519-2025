@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import java.util.Arrays;
@@ -18,6 +21,8 @@ public class CompetitionTeleOp extends OpModeBase {
     private boolean is_manual_rotating = false;
     private boolean intaking = false;
     private double outtake_power = 0.0;
+
+    private boolean constant_rotation = false;
 
     private Queue<Command> commands_to_run = new LinkedList<>();
 
@@ -107,6 +112,10 @@ public class CompetitionTeleOp extends OpModeBase {
     }
 
     private void rotating(){
+        if(gamepad1.yWasPressed()) {
+            constant_rotation = !constant_rotation;
+        }
+
         boolean setting_rotation = false;
         //rotating the disk to a specific position
         if (gamepad1.leftBumperWasReleased()) {
@@ -141,11 +150,16 @@ public class CompetitionTeleOp extends OpModeBase {
             robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
         }
 
+        if(constant_rotation) {
+            setting_rotation = true;
+            robot.getRotator().runMotor(-0.3);
+        }
+
         if (!setting_rotation) {
             robot.getRotator().runMotor(0.0);
         }
 
-        if (!robot.getRotator().isAtPosition() && !is_manual_rotating){
+        if (!robot.getRotator().isAtPosition() && !is_manual_rotating && !constant_rotation){
             is_auto_rotating = true;
         }
     }
