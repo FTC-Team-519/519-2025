@@ -1,28 +1,27 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.util;
 
 import android.graphics.Color;
 import com.qualcomm.robotcore.hardware.*;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.util.RobotMath;
+import org.firstinspires.ftc.teamcode.IntakeColorSensor;
+import org.firstinspires.ftc.teamcode.IntakeColorSensor.pieceType;
 
 import java.util.Arrays;
 
 public class Rotator {
 
-    public final double CLICKS_PER_ROTATION = 751.8;
+    public static final double CLICKS_PER_ROTATION = 751.8;
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
-    public final double PRECISION = 22; //unit is clicks
+    public final double PRECISION = 10; //unit is clicks
     public static final double MAX_SPEED = 0.5;
 
     private final DcMotor motor;
     private final IntakeColorSensor colorSensor1;
     private final IntakeColorSensor colorSensor2;
 
-    private final IntakeColorSensor.pieceType[] currentArtifacts = new IntakeColorSensor.pieceType[3];
+    private final pieceType[] currentArtifacts = new pieceType[3];
 
     private int currentPosition = 0;
-
 
     public void updateCurrentArtifacts() {
         if (getPosition() != currentPosition) {
@@ -31,8 +30,13 @@ public class Rotator {
         }
     }
 
+    public void setToNext() {
+        motor.setTargetPosition(motor.getTargetPosition()+(int)(getEncoderClicksPerRotation()/3.0));
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     //assuming proper alignment
-    public boolean fixCurrentArtifacts(IntakeColorSensor.pieceType[] motif) {
+    public boolean fixCurrentArtifacts(pieceType[] motif) {
         if (!Arrays.equals(currentArtifacts, motif)) {
             if (Arrays.equals(motif, rotatePieceArray(currentArtifacts))) {
                 motor.setTargetPosition((int) (motor.getCurrentPosition() + getEncoderClicksPerRotation() / 3));
@@ -47,15 +51,15 @@ public class Rotator {
         return false;
     }
 
-    public IntakeColorSensor.pieceType[] rotatePieceArray(IntakeColorSensor.pieceType[] orig) {
-        IntakeColorSensor.pieceType[] ans = new IntakeColorSensor.pieceType[3];
+    public pieceType[] rotatePieceArray(pieceType[] orig) {
+        pieceType[] ans = new pieceType[3];
         ans[0] = orig[2];
         ans[1] = orig[0];
         ans[2] = orig[1];
         return ans;
     }
 
-    public IntakeColorSensor.pieceType[] getCurrentArtifacts() {
+    public pieceType[] getCurrentArtifacts() {
         return currentArtifacts;
     }
 
@@ -69,7 +73,7 @@ public class Rotator {
         colorSensor2 = new IntakeColorSensor(hardwareMap,"colorSensor2");
     }
 
-    public IntakeColorSensor.pieceType getPieceColor() {
+    public pieceType getPieceColor() {
        return IntakeColorSensor.combine(colorSensor1.get_piece(), colorSensor2.get_piece());
     }
 
@@ -103,6 +107,10 @@ public class Rotator {
                 getEncoderClicksPerRotation() * 3)), 3);
     }
 
+    public int getEncoderPosition() {
+        return motor.getCurrentPosition();
+    }
+
     public void runMotor(double power) {
 
         motor.setPower(RobotMath.clamp(power, -MAX_SPEED, MAX_SPEED));
@@ -110,14 +118,21 @@ public class Rotator {
 
     //needs to be called continually every loop
     public void runMotorToPosition(double power) {
-        if (Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) < 100){
-            power *= 0.5;
+        final int SLOWDOWN_CUTOFF = (int) (50+PRECISION);
+        if (Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) < SLOWDOWN_CUTOFF){
+            power *= Math.abs(motor.getCurrentPosition() - motor.getTargetPosition())/(double)SLOWDOWN_CUTOFF;
         }
         if (isAtPosition()) {
             runMotor(0.0);
         } else if (motor.getCurrentPosition() > motor.getTargetPosition()) {
+            if (motor.getPower()>0.0){
+                power *= 0.5;
+            }
             runMotor(-power);
         } else {
+            if (motor.getPower()<0.0){
+                power *= 0.5;
+            }
             runMotor(power);
         }
     }

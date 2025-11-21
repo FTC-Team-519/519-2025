@@ -7,7 +7,7 @@ public class Kicker {
     private final CRServo rotator;
 
     private final double retractedPosition = 0.5d;
-    private final double extendedPosition = 0.75d;
+    private final double extendedPosition = 0.70d;
 
     private boolean going = false;
 
