@@ -24,6 +24,7 @@ public class CorrectForAprilTag implements Command {
     public void init() {
         robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.resumeStreaming();
     }
 
     @Override

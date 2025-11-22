@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
+import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectForAprilTag;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -121,11 +122,7 @@ public class CompetitionTeleOp extends OpModeBase {
 
         boolean setting_rotation = false;
         //rotating the disk to a specific position
-        if (gamepad1.leftBumperWasReleased()) {
-            //clockwise
-            robot.getRotator().setDiskRotation(false);
-            is_auto_rotating = true;
-        } else if (gamepad1.rightBumperWasReleased()) {
+        if (gamepad1.rightBumperWasReleased()) {
             //counter clock wise
             robot.getRotator().setDiskRotation(true);
             is_auto_rotating = true;
@@ -151,12 +148,7 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && is_manual_rotating) {
             is_manual_rotating = false;
             robot.getRotator().resetEncoder();
-            robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
-        }
-
-        if(constant_rotation) {
-            setting_rotation = true;
-            robot.getRotator().runMotor(-0.3);
+            robot.getRotator().getMotor().setTargetPosition(robot.getRotator().getMotor().getCurrentPosition());
         }
 
         if (!setting_rotation) {
@@ -225,6 +217,12 @@ public class CompetitionTeleOp extends OpModeBase {
             double angle = -3.0 * Math.PI / 4.0; // we want it rotated by 135 deg so that we can line up the shot easier
             raw_driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
+
+        if(gamepad1.leftBumperWasPressed()) {
+            commands_to_run.add(new CorrectForAprilTag(robot));
+        }
+
+
     }
 
     private void raw_driving(double x, double y, double rot) {
@@ -273,7 +271,6 @@ public class CompetitionTeleOp extends OpModeBase {
         }
         telemetry.addData("current disk pos: ", robot.getRotator().getEncoderPosition());
         telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
-        telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
         telemetry.addData("current disk pos(normalized): ", robot.getRotator().getEncoderPosition()/(double) Rotator.CLICKS_PER_ROTATION);
         telemetry.update();
     }
