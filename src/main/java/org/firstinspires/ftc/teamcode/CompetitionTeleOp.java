@@ -102,8 +102,13 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad2.yWasReleased()) {
             outtake_power = 0.6;
         }
+        if(gamepad2.bWasPressed() && Arrays.stream(robot.getIds()).anyMatch((i)-> i==20 || i ==24)) {
+            outtake_power = robot.getDistancesFromAprilTag()[1] * 0.016; // 0.016 being our untested distance {FIXME: Set to a final variable}
+        }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
+
+
     }
 
     private void kicking() {
