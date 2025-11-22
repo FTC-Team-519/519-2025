@@ -34,16 +34,16 @@ public class CompetitionTeleOp extends OpModeBase {
     }
 
     //FIXME: follow the specification in teleopcontrols.txt
-    public void loop(){
-        if (gamepad2.aWasReleased()){
+    public void loop() {
+        if (gamepad2.aWasReleased()) {
             commands_to_run = new LinkedList<>(); //clear the entire list
         }
 
-        if (!commands_to_run.isEmpty()){
+        if (!commands_to_run.isEmpty()) {
             Command command = commands_to_run.peek();
             assert command != null;
             command.run();
-            if (command.isDone()){
+            if (command.isDone()) {
                 command.shutdown();
                 commands_to_run.remove();
                 Command next_command = commands_to_run.peek();
@@ -51,7 +51,7 @@ public class CompetitionTeleOp extends OpModeBase {
                     next_command.init();
                 }
             }
-        }else{
+        } else {
             manual_controls();
         }
     }
@@ -79,16 +79,16 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry();
     }
 
-    private void camera(){
+    private void camera() {
         //save cpu using camera
-        if(gamepad2.leftBumperWasPressed()) {
+        if (gamepad2.leftBumperWasPressed()) {
             robot.stopStreaming();
-        } else if(gamepad2.rightBumperWasPressed()) {
+        } else if (gamepad2.rightBumperWasPressed()) {
             robot.resumeStreaming();
         }
     }
 
-    private void outtake(){
+    private void outtake() {
         if (gamepad2.dpadUpWasReleased()) {
             outtake_power += 0.02;
         }
@@ -96,33 +96,37 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad2.dpadDownWasReleased()) {
             outtake_power -= 0.02;
         }
-        if (gamepad2.xWasReleased()){
+        if (gamepad2.xWasReleased()) {
             outtake_power = 0.0;
         }
-        if(gamepad2.yWasReleased()){
+        if (gamepad2.yWasReleased()) {
             outtake_power = 0.6;
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
     }
 
-    private void kicking(){
+    private void kicking() {
         if (gamepad2.aWasPressed()) {
             robot.changeKicking();
         }
     }
 
-    private void rotating(){
-        if(gamepad1.yWasPressed()) {
+    private void rotating() {
+        if (gamepad1.yWasPressed()) {
             constant_rotation = !constant_rotation;
-            if (!constant_rotation){
+            if (!constant_rotation) {
                 robot.getRotator().setDiskRotation(true);
             }
         }
 
         boolean setting_rotation = false;
         //rotating the disk to a specific position
-        if (gamepad1.rightBumperWasReleased()) {
+        if (gamepad1.leftBumperWasReleased()) {
+            //clockwise
+            robot.getRotator().setDiskRotation(false);
+            is_auto_rotating = true;
+        } else if (gamepad1.rightBumperWasReleased()) {
             //counter clock wise
             robot.getRotator().setDiskRotation(true);
             is_auto_rotating = true;
@@ -148,26 +152,31 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && is_manual_rotating) {
             is_manual_rotating = false;
             robot.getRotator().resetEncoder();
-            robot.getRotator().getMotor().setTargetPosition(robot.getRotator().getMotor().getCurrentPosition());
+            robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
+        }
+
+        if (constant_rotation) {
+            setting_rotation = true;
+            robot.getRotator().runMotor(-0.3);
         }
 
         if (!setting_rotation) {
             robot.getRotator().runMotor(0.0);
         }
 
-        if (!robot.getRotator().isAtPosition() && !is_manual_rotating && !constant_rotation){
+        if (!robot.getRotator().isAtPosition() && !is_manual_rotating && !constant_rotation) {
             is_auto_rotating = true;
         }
     }
 
-    private void intake(){
+    private void intake() {
         if (gamepad1.bWasReleased()) {
             intaking = !intaking;
         }
 
         if (gamepad1.x) {
             robot.runIntake(-1.0);
-        }else {
+        } else {
             if (intaking) {
                 robot.runIntake(1.0);
             } else {
@@ -178,7 +187,7 @@ public class CompetitionTeleOp extends OpModeBase {
 
     }
 
-    private void driving(){
+    private void driving() {
         if (gamepad1.aWasReleased()) {
             driving_field_centric = !driving_field_centric;
             robot.resetYaw();
@@ -218,7 +227,7 @@ public class CompetitionTeleOp extends OpModeBase {
             raw_driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
 
-        if(gamepad1.leftBumperWasPressed()) {
+        if (gamepad1.leftBumperWasPressed()) {
             commands_to_run.add(new CorrectForAprilTag(robot));
         }
 
@@ -251,10 +260,10 @@ public class CompetitionTeleOp extends OpModeBase {
 
         double[] distanceArray = robot.getDistancesFromAprilTag();
 
-        telemetry.addData("X Offset",distanceArray[0]);
-        telemetry.addData("Y Offset",distanceArray[1]);
-        telemetry.addData("Z Offset",distanceArray[2]);
-        telemetry.addData("Yaw",distanceArray[3]);
+        telemetry.addData("X Offset", distanceArray[0]);
+        telemetry.addData("Y Offset", distanceArray[1]);
+        telemetry.addData("Z Offset", distanceArray[2]);
+        telemetry.addData("Yaw", distanceArray[3]);
 
         telemetry.addData("AprilTag Ids found", Arrays.toString(robot.getIds()));
 
@@ -262,16 +271,17 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("manually_adjusting_disk:", is_manual_rotating);
         telemetry.addData("rotating disk:", is_auto_rotating);
         telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
-        try{
+        try {
             //if (robot.getRotator().getPieceColor() != null) {
-                telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
+            telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
             //}
-        } catch (NullPointerException ignored){
+        } catch (NullPointerException ignored) {
 
         }
         telemetry.addData("current disk pos: ", robot.getRotator().getEncoderPosition());
         telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
-        telemetry.addData("current disk pos(normalized): ", robot.getRotator().getEncoderPosition()/(double) Rotator.CLICKS_PER_ROTATION);
+        telemetry.addData("current disk pos(normalized): ", robot.getRotator().getEncoderPosition() / (double) Rotator.CLICKS_PER_ROTATION);
+        telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
         telemetry.update();
     }
 }
