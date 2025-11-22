@@ -16,12 +16,13 @@ public class ShootThreeArtifacts extends OpModeBase {
     @Override
     public void init(){
         super.init();
+        final double shoot_power = 0.67;
 
         this.seq = new SequentialCommandGroup(
                 new DriveInDirection(36 * 6.0/5.0,  3.0 * Math.PI / 4.0, robot),
 
                 //first shot
-                new OuttakeCommand(robot, 0.68),
+                new OuttakeCommand(robot, shoot_power),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
@@ -29,7 +30,7 @@ public class ShootThreeArtifacts extends OpModeBase {
                 new DiskRotate(robot, true, 0.3),
 
                 //second shot
-                new OuttakeCommand(robot, 0.68),
+                new OuttakeCommand(robot, shoot_power),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
@@ -37,7 +38,7 @@ public class ShootThreeArtifacts extends OpModeBase {
                 new DiskRotate(robot, true, 0.3),
 
                 //third shot
-                new OuttakeCommand(robot, 0.68),
+                new OuttakeCommand(robot, shoot_power),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),

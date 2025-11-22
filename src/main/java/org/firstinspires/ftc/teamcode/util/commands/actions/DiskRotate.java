@@ -10,6 +10,8 @@ public class DiskRotate implements Command {
     private boolean clockwise;
     private double power;
 
+    private TimerCommand waitTimer;
+
     public DiskRotate(Robot robot, boolean clockwise, double power) {
         this.robot = robot;
         this.clockwise = clockwise;
@@ -28,7 +30,14 @@ public class DiskRotate implements Command {
 
     @Override
     public boolean isDone() {
-        return robot.getRotator().isAtPosition();
+        if (robot.getRotator().isAtPosition() ){
+            if (waitTimer == null){
+                waitTimer = new TimerCommand(0.01);
+            }else{
+                return waitTimer.isDone();
+            }
+        }
+        return false;
     }
 
     @Override

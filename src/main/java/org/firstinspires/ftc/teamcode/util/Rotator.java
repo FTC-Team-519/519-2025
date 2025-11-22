@@ -13,8 +13,12 @@ public class Rotator {
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
     public final double PRECISION = 20; //unit is clicks
-    public final double POWER_CUTTOFF = 0.05;
+    public final double POWER_CUTTOFF = 0.001;
     public static final double MAX_SPEED = 0.5;
+
+    //pid stuff
+    public static final double POS_COEF = 0.01;
+    public static final double DERIVATIVE_COEF = -0.01;
 
     private final DcMotor motor;
     private final IntakeColorSensor colorSensor1;
@@ -136,6 +140,13 @@ public class Rotator {
             }
             runMotor(power);
         }
+    }
+
+    public void runMotorToPositionPID(){
+        double pos = motor.getTargetPosition() - motor.getCurrentPosition();
+        double der = motor.getPower();
+        double power = pos * POS_COEF + der * DERIVATIVE_COEF;
+        runMotor(power);
     }
 
     public boolean isAtPosition() {
