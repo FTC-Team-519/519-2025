@@ -99,7 +99,7 @@ public class CompetitionTeleOp extends OpModeBase {
             outtake_power = 0.0;
         }
         if(gamepad2.yWasReleased()){
-            outtake_power = 1.0;
+            outtake_power = 0.6;
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
@@ -114,6 +114,9 @@ public class CompetitionTeleOp extends OpModeBase {
     private void rotating(){
         if(gamepad1.yWasPressed()) {
             constant_rotation = !constant_rotation;
+            if (!constant_rotation){
+                robot.getRotator().setDiskRotation(false);
+            }
         }
 
         boolean setting_rotation = false;
@@ -168,11 +171,18 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad1.bWasReleased()) {
             intaking = !intaking;
         }
-        if (intaking) {
-            robot.runIntake(1.0);
-        } else {
-            robot.runIntake(0.0);
+
+        if (gamepad1.x) {
+            robot.runIntake(-1.0);
+        }else {
+            if (intaking) {
+                robot.runIntake(1.0);
+            } else {
+                robot.runIntake(0.0);
+            }
         }
+
+
     }
 
     private void driving(){

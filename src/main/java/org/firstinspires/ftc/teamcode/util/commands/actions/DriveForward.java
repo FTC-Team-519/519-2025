@@ -10,7 +10,7 @@ public class DriveForward implements Command {
     private final Robot robot;
 
     public DriveForward(double inches, Robot robot) {
-        distance = inches*Robot.getCountsPerInchForDriveMotors();
+        distance = inches*Robot.getCountsPerInchForDriveMotors()/2;
 
         // init robot
         this.robot = robot;
