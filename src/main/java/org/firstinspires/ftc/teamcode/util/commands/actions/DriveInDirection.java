@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.util.commands.actions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.util.Robot;
+import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 //the distance that the motors report they have driven might not be the actual amount we have driven due to slippage
@@ -14,7 +15,7 @@ public class DriveInDirection implements Command {
     private final Robot robot;
 
     public DriveInDirection(double inches, double direction, Robot robot) {
-        this.direction = direction % (Math.PI * 2);
+        this.direction = RobotMath.trueMod(direction, (Math.PI * 2));
         this.robot = robot;
         this.distance = inches * Robot.getCountsPerInchForDriveMotors();
     }
@@ -51,7 +52,10 @@ public class DriveInDirection implements Command {
 
     @Override
     public boolean isDone() {
-        return Math.abs(robot.getLeftFrontDrive().getCurrentPosition()) >= Math.abs(robot.getLeftFrontDrive().getTargetPosition());
+        return Math.abs(robot.getLeftFrontDrive().getCurrentPosition()) >= Math.abs(robot.getLeftFrontDrive().getTargetPosition()) ||
+                Math.abs(robot.getRightFrontDrive().getCurrentPosition()) >= Math.abs(robot.getRightFrontDrive().getTargetPosition()) ||
+                Math.abs(robot.getLeftBackDrive().getCurrentPosition()) >= Math.abs(robot.getLeftBackDrive().getTargetPosition()) ||
+                Math.abs(robot.getRightBackDrive().getCurrentPosition()) >= Math.abs(robot.getRightBackDrive().getTargetPosition());
     }
 
     @Override

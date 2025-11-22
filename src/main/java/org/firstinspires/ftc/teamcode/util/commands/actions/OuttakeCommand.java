@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.util.commands.actions;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
-public class StartOuttakeCommand implements Command {
+public class OuttakeCommand implements Command {
 
     private final Robot robot;
     private final double power;
 
-    public StartOuttakeCommand(Robot robot, double power) {
+    public OuttakeCommand(Robot robot, double power) {
         this.robot = robot;
         this.power = power;
     }

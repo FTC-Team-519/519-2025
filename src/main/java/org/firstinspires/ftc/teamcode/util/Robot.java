@@ -25,6 +25,10 @@ public class Robot {
 
     private final Outtake outtake;
 
+    public Kicker getKicker() {
+        return kicker;
+    }
+
     private final Kicker kicker;
 
     public Robot(HardwareMap hardwareMap) {

@@ -100,4 +100,24 @@ public class RobotMath {
 
         return ans;
     }
+
+    public static double trueMod(double dividend, double divisor) {
+        if (divisor == 0) {
+            // Handle division by zero based on your application's requirements
+            // e.g., throw an IllegalArgumentException or return NaN
+            return Double.NaN;
+        }
+
+        double remainder = dividend % divisor;
+
+        // Adjust the remainder to always be in the range [0, |divisor|) if divisor is positive,
+        // or (0, -|divisor|] if divisor is negative.
+        if (divisor > 0 && remainder < 0) {
+            remainder += divisor;
+        } else if (divisor < 0 && remainder > 0) {
+            remainder += divisor;
+        }
+
+        return remainder;
+    }
 }

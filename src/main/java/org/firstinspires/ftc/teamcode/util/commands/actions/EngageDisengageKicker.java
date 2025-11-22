@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
 import org.firstinspires.ftc.teamcode.util.Kicker;
+import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class EngageDisengageKicker implements Command {
@@ -9,15 +10,15 @@ public class EngageDisengageKicker implements Command {
     private final double power;
     private final boolean engaging;
 
-    public EngageDisengageKicker(Kicker kicker, double power, boolean engaging) {
-        this.kicker = kicker;
+    public EngageDisengageKicker(Robot robot, double power, boolean engaging) {
+        this.kicker = robot.getKicker();
         this.power = power;
         this.engaging = engaging;
     }
 
     @Override
     public void init() {
-        kicker.runEngager();
+        kicker.runEngager(!engaging);
     }
 
     @Override
@@ -31,7 +32,7 @@ public class EngageDisengageKicker implements Command {
 
     @Override
     public boolean isDone() {
-        return !kicker.isGoing();
+        return true;
     }
 
     @Override

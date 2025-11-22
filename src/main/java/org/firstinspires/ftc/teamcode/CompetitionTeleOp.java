@@ -115,7 +115,7 @@ public class CompetitionTeleOp extends OpModeBase {
         if(gamepad1.yWasPressed()) {
             constant_rotation = !constant_rotation;
             if (!constant_rotation){
-                robot.getRotator().setDiskRotation(false);
+                robot.getRotator().setDiskRotation(true);
             }
         }
 
@@ -123,11 +123,11 @@ public class CompetitionTeleOp extends OpModeBase {
         //rotating the disk to a specific position
         if (gamepad1.leftBumperWasReleased()) {
             //clockwise
-            robot.getRotator().setDiskRotation(true);
+            robot.getRotator().setDiskRotation(false);
             is_auto_rotating = true;
         } else if (gamepad1.rightBumperWasReleased()) {
             //counter clock wise
-            robot.getRotator().setDiskRotation(false);
+            robot.getRotator().setDiskRotation(true);
             is_auto_rotating = true;
         }
         if (is_auto_rotating) {
@@ -142,6 +142,7 @@ public class CompetitionTeleOp extends OpModeBase {
         //manual rotation
         if (gamepad1.left_trigger != 0 || gamepad1.right_trigger != 0) {
             is_auto_rotating = false;
+            constant_rotation = false;
             is_manual_rotating = true;
             setting_rotation = true;
             robot.getRotator().runMotor((gamepad1.left_trigger - gamepad1.right_trigger));//*Rotator.MAX_SPEED);
@@ -272,6 +273,7 @@ public class CompetitionTeleOp extends OpModeBase {
         }
         telemetry.addData("current disk pos: ", robot.getRotator().getEncoderPosition());
         telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
+        telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
         telemetry.addData("current disk pos(normalized): ", robot.getRotator().getEncoderPosition()/(double) Rotator.CLICKS_PER_ROTATION);
         telemetry.update();
     }
