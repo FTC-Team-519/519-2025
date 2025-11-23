@@ -13,7 +13,7 @@ public class Rotator {
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
     public final double PRECISION = 20; //unit is clicks
-    public final double POWER_CUTTOFF = 0.001;
+    public final double POWER_CUTTOFF = 0.005;
     public static final double MAX_SPEED = 0.5;
 
     //pid stuff
@@ -143,9 +143,13 @@ public class Rotator {
     }
 
     public void runMotorToPositionPID(){
+        runMotorToPositionPID(POS_COEF, DERIVATIVE_COEF);
+    }
+
+    public void runMotorToPositionPID(double p_coef, double d_coef){
         double pos = motor.getTargetPosition() - motor.getCurrentPosition();
         double der = motor.getPower();
-        double power = pos * POS_COEF + der * DERIVATIVE_COEF;
+        double power = pos * p_coef + der * d_coef;
         runMotor(power);
     }
 

@@ -245,13 +245,16 @@ public class CompetitionTeleOp extends OpModeBase {
         double lb_power = y - x + rot;
         double rb_power = y + x - rot;
 
-        double scale = Math.abs(y) + Math.abs(x) + Math.abs(rot);
+        double max = 0.0;
+        max = Math.max(Math.abs(lf_power), Math.abs(rf_power));
+        max = Math.max(max, Math.abs(lb_power));
+        max = Math.max(max, Math.abs(rb_power));
 
-        if (scale > 1.0) {
-            lf_power /= scale;
-            rf_power /= scale;
-            lb_power /= scale;
-            rb_power /= scale;
+        if (max > 1.0) {
+            lf_power  /= max;
+            rf_power /= max;
+            lb_power   /= max;
+            rb_power  /= max;
         }
 
         robot.setLeftFrontPower(lf_power);

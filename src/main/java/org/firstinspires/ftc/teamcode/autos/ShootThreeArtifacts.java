@@ -2,23 +2,16 @@ package org.firstinspires.ftc.teamcode.autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
+import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.*;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
-@Autonomous(name = "ShootThreeArtifacts")
-public class ShootThreeArtifacts extends OpModeBase {
-
-    private Command seq;
-
-    private boolean is_done = false;
-
-    @Override
-    public void init(){
-        super.init();
+public class ShootThreeArtifacts {
+    public static Command init(Robot robot){
         final double shoot_power = 0.67;
 
-        this.seq = new SequentialCommandGroup(
+        return new SequentialCommandGroup(
                 new DriveInDirection(36 * 6.0/5.0,  3.0 * Math.PI / 4.0, robot),
 
                 //first shot
@@ -47,16 +40,5 @@ public class ShootThreeArtifacts extends OpModeBase {
 
                 new OuttakeCommand(robot, 0.0)
         );
-        this.seq.init();
-    }
-
-    @Override
-    public void loop() {
-        if (!seq.isDone() && !is_done){
-            seq.run();
-        }else{
-            is_done = true;
-            seq.shutdown();
-        }
     }
 }
