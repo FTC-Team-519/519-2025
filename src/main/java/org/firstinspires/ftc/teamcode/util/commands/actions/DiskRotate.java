@@ -6,9 +6,9 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class DiskRotate implements Command {
 
-    private Robot robot;
-    private boolean clockwise;
-    private double power;
+    private final Robot robot;
+    private final boolean clockwise;
+    private final double power;
 
     private TimerCommand waitTimer;
 

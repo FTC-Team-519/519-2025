@@ -5,13 +5,13 @@ import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 //CLOCKWISE IS NEGATIVE IMU, positive boolean is clockwise, negative is counterclockwise
-public class Rotate implements Command {
+public class RotateRobotCommand implements Command {
     private final double absTargetAngle;
     private final boolean isClockwise;
     private final Robot robot;
     private final double startSpeed;
 
-    public Rotate(double angle, boolean isClockwise, double speed, Robot robot) {
+    public RotateRobotCommand(double angle, boolean isClockwise, double speed, Robot robot) {
         this.absTargetAngle = Math.abs(angle);
         this.isClockwise = isClockwise;
         startSpeed = speed;
