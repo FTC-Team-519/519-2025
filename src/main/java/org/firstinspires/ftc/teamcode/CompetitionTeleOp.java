@@ -141,7 +141,7 @@ public class CompetitionTeleOp extends OpModeBase {
         }
         if (is_auto_rotating) {
             setting_rotation = true;
-            robot.getRotator().runMotorToPositionPID();
+            robot.getRotator().runMotorToPosition(0.3);
             if (robot.getRotator().isAtPosition()) {
                 is_auto_rotating = false;
             }
