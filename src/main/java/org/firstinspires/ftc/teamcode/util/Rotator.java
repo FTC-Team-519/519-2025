@@ -13,15 +13,25 @@ public class Rotator {
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
     public final double PRECISION = 20; //unit is clicks
-    public final double POWER_CUTTOFF = 0.005;
+    public final double POWER_CUTTOFF = 0.05;
     public static final double MAX_SPEED = 0.5;
 
     //pid stuff
     public static final double POS_COEF = 0.01;
-    public static final double DERIVATIVE_COEF = -0.01;
+    public static final double DERIVATIVE_COEF = -0.20;
 
     private final DcMotor motor;
+
+    public IntakeColorSensor getColorSensor1() {
+        return colorSensor1;
+    }
+
     private final IntakeColorSensor colorSensor1;
+
+    public IntakeColorSensor getColorSensor2() {
+        return colorSensor2;
+    }
+
     private final IntakeColorSensor colorSensor2;
 
     private final pieceType[] currentArtifacts = new pieceType[3];

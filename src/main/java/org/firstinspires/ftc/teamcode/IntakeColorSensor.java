@@ -52,10 +52,8 @@ public class IntakeColorSensor {
     }
 
     public pieceType get_piece(){
-        if (get_distance_inch() < (5.0)) {
+        if (get_distance_inch() < (1.5)) {
             return IntakeColorSensor.pieceType.NOT_THERE;
-        } else if (get_hsv()[1] < 10) { // we see white
-            return pieceType.NOT_THERE;
         } else if (get_hsv()[0] > 160) {
             return IntakeColorSensor.pieceType.GREEN;
         } else {

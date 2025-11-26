@@ -30,13 +30,13 @@ public class CompetitionTeleOp extends OpModeBase {
     @Override
     public void init() {
         super.init();
-
     }
 
+    //we are not solving this right now
     //FIXME: follow the specification in teleopcontrols.txt
     public void loop() {
-        if (gamepad2.aWasReleased()) {
-            commands_to_run = new LinkedList<>(); //clear the entire list
+        if (gamepad2.aWasReleased()) { // when the a button is pressed
+            commands_to_run = new LinkedList<>(); //clear the running commands incase we no longer want
         }
 
         if (!commands_to_run.isEmpty()) {
@@ -118,6 +118,9 @@ public class CompetitionTeleOp extends OpModeBase {
     }
 
     private void rotating() {
+        //constant rotation rotates the disk constantly
+        //manual rotation allow the user to adjust the rotation amount
+        //auto-rotation automatically rotates the disk 1 sector(1/3 of the disk) in the selected direction
         if (gamepad1.yWasPressed()) {
             constant_rotation = !constant_rotation;
             if (!constant_rotation) {
@@ -138,7 +141,7 @@ public class CompetitionTeleOp extends OpModeBase {
         }
         if (is_auto_rotating) {
             setting_rotation = true;
-            robot.getRotator().runMotorToPosition(0.3);
+            robot.getRotator().runMotorToPositionPID();
             if (robot.getRotator().isAtPosition()) {
                 is_auto_rotating = false;
             }
@@ -282,6 +285,18 @@ public class CompetitionTeleOp extends OpModeBase {
         try {
             //if (robot.getRotator().getPieceColor() != null) {
             telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
+            telemetry.addData("color sensor 1 red", robot.getRotator().getColorSensor1().get_rgb()[0]);
+            telemetry.addData("color sensor 1 green", robot.getRotator().getColorSensor1().get_rgb()[1]);
+            telemetry.addData("color sensor 1 blue", robot.getRotator().getColorSensor1().get_rgb()[2]);
+            telemetry.addData("color sensor 1 rgb", Arrays.toString(robot.getRotator().getColorSensor1().get_rgb()));
+            telemetry.addData("color sensor 1 hsv", Arrays.toString(robot.getRotator().getColorSensor1().get_hsv()));
+            telemetry.addData("color sensor 1 distance", robot.getRotator().getColorSensor1().get_distance_inch());
+            telemetry.addData("color sensor 1 sensing", robot.getRotator().getColorSensor1().get_piece());
+            telemetry.addData("color sensor 2 red", robot.getRotator().getColorSensor2().get_rgb()[0]);
+            telemetry.addData("color sensor 2 green", robot.getRotator().getColorSensor2().get_rgb()[1]);
+            telemetry.addData("color sensor 2 blue", robot.getRotator().getColorSensor2().get_rgb()[2]);
+            telemetry.addData("color sensor 2 distance", robot.getRotator().getColorSensor2().get_distance_inch());
+            telemetry.addData("color sensor 2 sensing", robot.getRotator().getColorSensor2().get_piece());
             //}
         } catch (NullPointerException ignored) {
 

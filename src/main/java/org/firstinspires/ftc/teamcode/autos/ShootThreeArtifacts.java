@@ -20,7 +20,7 @@ public class ShootThreeArtifacts {
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, false),
-                new DiskRotate(robot, true, 0.3),
+                new DiskRotatePID(robot, true),
 
                 //second shot
                 new OuttakeCommand(robot, shoot_power),
@@ -28,7 +28,7 @@ public class ShootThreeArtifacts {
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, false),
-                new DiskRotate(robot, true, 0.3),
+                new DiskRotatePID(robot, true),
 
                 //third shot
                 new OuttakeCommand(robot, shoot_power),
@@ -36,7 +36,7 @@ public class ShootThreeArtifacts {
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, false),
-                new DiskRotate(robot, true, 0.3),
+                new DiskRotatePID(robot, true),
 
                 new OuttakeCommand(robot, 0.0)
         );
