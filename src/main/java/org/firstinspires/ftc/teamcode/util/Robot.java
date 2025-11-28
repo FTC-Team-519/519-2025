@@ -4,7 +4,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.IntakeColorSensor.*;
-import org.firstinspires.ftc.teamcode.util.Rotator;
 
 public class Robot {
     private final DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
@@ -285,6 +284,21 @@ public class Robot {
         rightBackDrive.setPower(power);
     }
 
+    public void setRotationClockwiseReset(int pos) {
+        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition()-pos);
+        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition()-pos);
+        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition()+pos);
+        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition()+pos);
+        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void setRotationClockwise(int pos) {
+        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition()-pos);
+        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition()-pos);
+        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition()+pos);
+        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition()+pos);
+    }
+
     public void setDriveTargetPosition(int position) {
         leftFrontDrive.setTargetPosition(position);
         rightFrontDrive.setTargetPosition(position);
@@ -309,6 +323,12 @@ public class Robot {
 
 
 
+    public boolean atDriveTargetPosition(int epsilon) {
+        return Math.abs(leftFrontDrive.getCurrentPosition()-leftFrontDrive.getTargetPosition())<=epsilon &&
+                Math.abs(rightFrontDrive.getCurrentPosition()-rightFrontDrive.getTargetPosition())<=epsilon &&
+                Math.abs(leftBackDrive.getCurrentPosition()-leftBackDrive.getTargetPosition())<=epsilon &&
+                Math.abs(rightBackDrive.getCurrentPosition()-rightBackDrive.getTargetPosition())<=epsilon;
+    }
 
     public boolean atDriveTargetPosition(boolean isGoingForward) {
         if (isGoingForward) {

@@ -4,56 +4,47 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
+import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
 public class CorrectForAprilTag implements Command {
 
 
-    private double[] distance;
-
-    private final double X_EPSILON = 5.0;
-    private final double YAW_EPSILON = 1.0;
+    private Command seq;
 
     private final Robot robot;
 
-    public CorrectForAprilTag(Robot robot1) {
-        robot = robot1;
-        distance = robot.getDistancesFromAprilTag();
+    public CorrectForAprilTag(Robot robot) {
+        this.robot = robot;
+        double[] distance = robot.getDistancesFromAprilTag();
+        if(distance[1]>1) { // if we actually have a read
+//            seq = new SequentialCommandGroup(
+//                    new CorrectRotationForAprilTag(robot),
+//                    new DriveInDirection(-distance[0], 1.0/4 * Math.PI,robot)
+//            );
+            seq = new CorrectRotationForAprilTag(robot);
+        } else {
+            seq = new FinishedCommand();
+        }
     }
 
     @Override
     public void init() {
-        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.resumeStreaming();
+        seq.init();
     }
 
     @Override
     public void run() {
-        double[] powers = RobotMath.motorPowers(distance[0],distance[3]);
-
-        double lF = powers[0];
-        double rF = powers[1];
-        double lB = powers[2];
-        double rB = powers[3];
-
-        robot.setLeftFrontPower(lF);
-        robot.setRightFrontPower(rF);
-        robot.setLeftBackPower(lB);
-        robot.setRightBackPower(rB);
-
-        distance = robot.getDistancesFromAprilTag();
+        seq.run();
     }
 
     @Override
     public boolean isDone() {
-        return Math.abs(distance[0])<X_EPSILON && Math.abs(distance[3])<YAW_EPSILON;
+        return seq.isDone();
     }
 
     @Override
     public void shutdown() {
-        robot.setAllDrivePower(0.0);
-        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        seq.shutdown();
     }
 
 }

@@ -85,6 +85,7 @@ public class RobotMath {
         double max = Math.max(Math.abs(fL),Math.abs(fR));
         max = Math.max(max,Math.abs(bL));
         max = Math.max(max,Math.abs(bR));
+        max = max * 2;
 
         if(max>1.0d) {
             fL /= max;
@@ -119,5 +120,13 @@ public class RobotMath {
         }
 
         return remainder;
+    }
+
+    // helper to get the encoder distance from a given angle to april tag
+    public static int angleToTicks(double yawDeg) {
+        double angleRad = Math.toRadians(yawDeg);
+        double dist = (angleRad * 15.5) / 2.0;     // distance each wheel must move, (15.5 in between wheels)
+        double rotations = dist / (2 * Math.PI * 2); // number of rotations necessary, (2 in is radius of wheels)
+        return (int)(rotations * 384.5); // number of ticks to rotate that much (384.5 is ticks per rev for gobilda 5202)
     }
 }
