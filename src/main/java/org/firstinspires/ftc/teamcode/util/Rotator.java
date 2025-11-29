@@ -38,6 +38,8 @@ public class Rotator {
 
     private int currentPosition = 0;
 
+    private boolean seen = false;
+
     public void updateCurrentArtifacts() {
         if (getPosition() != currentPosition) {
             currentArtifacts[getPosition()] = getPieceColor();
@@ -100,7 +102,7 @@ public class Rotator {
         return currentArtifacts;
     }
 
-    public boolean doesIntakeContainPiece(double visibleDistanceInches) {
+    public boolean doesIntakeContainPiece() {
         return getPieceColor() != IntakeColorSensor.pieceType.NOT_THERE;
     }
     public float[] rgbToHSV(int r, int g, int b) {

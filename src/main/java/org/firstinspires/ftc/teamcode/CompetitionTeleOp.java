@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectForAprilTag;
 import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectRotationForAprilTag;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveInDirection;
+import org.firstinspires.ftc.teamcode.IntakeColorSensor.pieceType;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -23,6 +24,8 @@ public class CompetitionTeleOp extends OpModeBase {
     private boolean is_auto_rotating = false;
     private boolean is_manual_rotating = false;
     private boolean intaking = false;
+    private boolean hasDetectedMotif = false;
+    private pieceType[] motif = null;
     private double outtake_power = 0.0;
 
     private boolean constant_rotation = false;
@@ -88,6 +91,14 @@ public class CompetitionTeleOp extends OpModeBase {
         } else if (gamepad2.rightBumperWasPressed()) {
             robot.resumeStreaming();
         }
+
+        if(!hasDetectedMotif) {
+            pieceType[] detMotif = robot.getMotif();
+            if (detMotif != null) {
+                motif = detMotif;
+                hasDetectedMotif = true;
+            }
+        }
     }
 
     private void outtake() {
@@ -105,7 +116,7 @@ public class CompetitionTeleOp extends OpModeBase {
             outtake_power = 0.6;
         }
         if(gamepad2.bWasPressed() && Arrays.stream(robot.getIds()).anyMatch((i)-> i==20 || i ==24)) {
-            outtake_power = robot.getDistancesFromAprilTag()[1] * 0.016; // 0.016 being our untested distance {FIXME: Set to a final variable}
+            outtake_power = RobotMath.outPower(robot.getDistancesFromAprilTag()[1]); // 0.016 being our untested distance {FIXME: Set to a final variable}
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
@@ -313,6 +324,7 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
         telemetry.addData("current disk pos(normalized): ", robot.getRotator().getEncoderPosition() / (double) Rotator.CLICKS_PER_ROTATION);
         telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
+        telemetry.addData("Current Motif",Arrays.toString(motif));
         telemetry.update();
     }
 }

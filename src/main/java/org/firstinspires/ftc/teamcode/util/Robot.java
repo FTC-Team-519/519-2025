@@ -106,6 +106,10 @@ public class Robot {
         return rotator.fixCurrentArtifacts(motif);
     }
 
+    public pieceType[] getMotif() {return camera.getMotif();}
+
+    public boolean doesIntakeContainPiece() {return rotator.doesIntakeContainPiece();}
+
     public pieceType[] currentRotatorArtifacts() {
         return rotator.getCurrentArtifacts();
     }

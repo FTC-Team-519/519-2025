@@ -129,4 +129,9 @@ public class RobotMath {
         double rotations = dist / (2 * Math.PI * 2); // number of rotations necessary, (2 in is radius of wheels)
         return (int)(rotations * 384.5); // number of ticks to rotate that much (384.5 is ticks per rev for gobilda 5202)
     }
+
+    public static double outPower(double dist) {
+        if(dist<=40) return 0.62;
+        return 0.00265359 * (dist - 40) + 0.62; // magic numbers moment
+    }
 }
