@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.IntakeColorSensor.*;
+//import org.firstinspires.ftc.teamcode.util.structs.ComparableCircularList;
 
 public class Robot {
     private final DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
@@ -13,6 +14,9 @@ public class Robot {
     public Rotator getRotator() {
         return rotator;
     }
+
+//    private final ComparableCircularList<Double> cache; // cached x values from april tag detection
+//    private final int length = 30; // amount of checks we want to cache
 
     private final Rotator rotator;
 
@@ -54,6 +58,8 @@ public class Robot {
         rotator.getMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotator.resetEncoder();
 
+//        cache = new ComparableCircularList<>(length,0.0d);
+
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD)));
     }
@@ -66,7 +72,15 @@ public class Robot {
 
     public double distanceFromPiece() {return rotator.distance();}
 
-    public double[] getDistancesFromAprilTag() {return camera.distances();}
+    public double[] getDistancesFromAprilTag() {
+//        double[] ans = camera.distances();
+//        cache.set(ans[0]);
+        return camera.distances();
+    }
+
+//    public boolean isLeftFromAprilTag() {
+//        return cache.getTotalComparison();
+//    }
 
     public int[] getIds() {return camera.getIDs();}
 
