@@ -66,6 +66,8 @@ public class Robot {
 
     public void runOuttake(double power) {outtake.runMotors(power);}
 
+    public boolean isRotatorAligned() {return rotator.isAligned();}
+
     public void BLASTTTTTTTTT() {
         runOuttake(1.0d);
     }

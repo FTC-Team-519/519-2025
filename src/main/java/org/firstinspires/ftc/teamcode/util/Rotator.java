@@ -28,6 +28,8 @@ public class Rotator {
 
     private final IntakeColorSensor colorSensor1;
 
+    private final TouchSensor magLimSwitch;
+
     public IntakeColorSensor getColorSensor2() {
         return colorSensor2;
     }
@@ -88,7 +90,10 @@ public class Rotator {
         motor.setTargetPosition(0);
         colorSensor1 = new IntakeColorSensor(hardwareMap,"colorSensor1");
         colorSensor2 = new IntakeColorSensor(hardwareMap,"colorSensor2");
+        magLimSwitch = hardwareMap.get(TouchSensor.class,"magLimSwitch");
     }
+
+    public boolean isAligned() {return magLimSwitch.isPressed();}
 
     public pieceType getPieceColor() {
        return IntakeColorSensor.combine(colorSensor1.get_piece(), colorSensor2.get_piece());
