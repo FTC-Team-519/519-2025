@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.hardware;
 
 import android.graphics.Color;
 import com.qualcomm.robotcore.hardware.*;
-import org.firstinspires.ftc.teamcode.IntakeColorSensor;
-import org.firstinspires.ftc.teamcode.IntakeColorSensor.pieceType;
+import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType;
+import org.firstinspires.ftc.teamcode.util.RobotMath;
 
 import java.util.Arrays;
 

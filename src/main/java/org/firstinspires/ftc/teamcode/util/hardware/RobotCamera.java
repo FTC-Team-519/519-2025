@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.IntakeColorSensor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.*;
-import org.firstinspires.ftc.teamcode.IntakeColorSensor.pieceType;
+import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType;
 
 import java.util.*;
 

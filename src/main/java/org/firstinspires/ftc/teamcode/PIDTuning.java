@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
-import org.firstinspires.ftc.teamcode.util.Rotator;
 
 @TeleOp(name = "Disk PID tuning")
 public class PIDTuning extends OpModeBase {

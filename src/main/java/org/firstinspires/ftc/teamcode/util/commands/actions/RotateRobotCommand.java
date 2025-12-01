@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.teamcode.util.Robot;
+import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 //CLOCKWISE IS NEGATIVE IMU, positive boolean is clockwise, negative is counterclockwise

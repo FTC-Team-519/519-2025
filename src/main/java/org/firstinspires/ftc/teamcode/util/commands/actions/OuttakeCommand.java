@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
-import org.firstinspires.ftc.teamcode.util.Robot;
+import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class OuttakeCommand implements Command {

@@ -1,19 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
-import org.firstinspires.ftc.teamcode.util.Rotator;
+import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectForAprilTag;
-import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectRotationForAprilTag;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveInDirection;
-import org.firstinspires.ftc.teamcode.IntakeColorSensor.pieceType;
+import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import java.util.Arrays;

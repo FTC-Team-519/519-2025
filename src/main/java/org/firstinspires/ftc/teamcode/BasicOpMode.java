@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.util.Robot;
+import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor;
+import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 
 import static java.lang.Math.abs;
 

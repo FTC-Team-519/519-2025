@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
-import org.firstinspires.ftc.teamcode.util.Kicker;
-import org.firstinspires.ftc.teamcode.util.Robot;
+import org.firstinspires.ftc.teamcode.util.hardware.Kicker;
+import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
 public class EngageDisengageKicker implements Command {
