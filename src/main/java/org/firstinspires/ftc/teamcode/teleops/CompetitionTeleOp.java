@@ -286,6 +286,8 @@ public class CompetitionTeleOp extends OpModeBase {
 
         double[] distanceArray = robot.getDistancesFromAprilTag();
 
+        telemetry.addData("magnet seeing", robot.getRotator().isAligned());
+
         telemetry.addData("X Offset", distanceArray[0]);
         telemetry.addData("Y Offset", distanceArray[1]);
         telemetry.addData("Z Offset", distanceArray[2]);

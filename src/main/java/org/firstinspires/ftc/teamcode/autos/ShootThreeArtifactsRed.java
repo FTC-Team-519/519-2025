@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
-import org.firstinspires.ftc.teamcode.util.commands.actions.DriveForward;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveSideways;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
@@ -20,7 +19,7 @@ public class ShootThreeArtifactsRed extends OpModeBase {
         final double shoot_power = 0.67;
 
         this.seq = new SequentialCommandGroup(
-                ShootThreeArtifacts.init(robot),
+                MoveAndShootThreeArtifacts.init(robot),
                 new DriveSideways(-40, robot)
         );
         this.seq.init();
