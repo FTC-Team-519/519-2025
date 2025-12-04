@@ -6,8 +6,7 @@ import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCom
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 
 public class ShootThreeArtifacts {
-    public static Command init(Robot robot){
-        final double shoot_power = 0.67;
+    public static Command init(Robot robot, double shoot_power){
 
         return new SequentialCommandGroup(
                 //first shot
