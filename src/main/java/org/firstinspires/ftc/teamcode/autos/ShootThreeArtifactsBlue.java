@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.*;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
+import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 
 @Autonomous(name = "ShootThreeArtifactsBlue")
 public class ShootThreeArtifactsBlue extends OpModeBase {
@@ -19,8 +20,9 @@ public class ShootThreeArtifactsBlue extends OpModeBase {
         final double shoot_power = 0.67;
 
         this.seq = new SequentialCommandGroup(
-                MoveAndShootThreeArtifacts.init(robot),
-                new DriveForward(40, robot)
+                MoveAndShootThreeArtifacts.init(robot)
+
+                //new DriveForward(40, robot)
         );
         this.seq.init();
     }
@@ -33,5 +35,10 @@ public class ShootThreeArtifactsBlue extends OpModeBase {
             is_done = true;
             seq.shutdown();
         }
+
+        telemetry.addData("current disk pos: ", robot.getRotator().getEncoderPosition());
+        telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
+        telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
+        telemetry.update();
     }
 }

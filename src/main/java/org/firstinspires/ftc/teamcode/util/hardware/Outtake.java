@@ -21,7 +21,7 @@ public class Outtake {
 
     public void runMotors(double power) {
         LeftMotor.setPower(power);
-        RightMotor.setPower(power);
+        RightMotor.setPower(power/1.1); //this will help the robot shoot straighter
     }
 
 

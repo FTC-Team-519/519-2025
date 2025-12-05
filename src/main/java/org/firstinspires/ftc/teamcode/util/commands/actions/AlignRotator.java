@@ -14,7 +14,7 @@ public class AlignRotator implements Command {
     public void init() {}
 
     public void run() {
-        robot.runRotatorMotor(0.1d);
+        robot.runRotatorMotor(-0.15d);
     }
 
     public boolean isDone() {
@@ -23,5 +23,6 @@ public class AlignRotator implements Command {
 
     public void shutdown() {
         robot.runRotatorMotor(0.0d);
+        robot.getRotator().resetEncoder();
     }
 }

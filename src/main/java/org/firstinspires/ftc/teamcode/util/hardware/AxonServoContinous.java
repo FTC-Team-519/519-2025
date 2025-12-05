@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //from https://github.com/The-Robotics-Catalyst-Foundation/FIRST-Opensource/blob/main/FTC/RTPAxon/RTPAxon.java#L280
-public class AxonServo {
+public class AxonServoContinous {
     // Encoder for servo position feedback
     private final AnalogInput servoEncoder;
     // Continuous rotation servo
@@ -54,7 +54,7 @@ public class AxonServo {
     // region constructors
 
     // Basic constructor, defaults to FORWARD direction
-    public AxonServo(HardwareMap hardwareMap) {
+    public AxonServoContinous(HardwareMap hardwareMap) {
         rtp = true;
         this.servo = hardwareMap.crservo.get("diskRotator");
         servoEncoder = hardwareMap.analogInput.get("diskEncoder");
@@ -63,7 +63,7 @@ public class AxonServo {
     }
 
     // Constructor with explicit direction
-    public AxonServo(HardwareMap hardwareMap, Direction direction) {
+    public AxonServoContinous(HardwareMap hardwareMap, Direction direction) {
         this(hardwareMap);
         this.direction = direction;
         initialize();
@@ -351,44 +351,43 @@ public class AxonServo {
 
         @Override
         public void runOpMode() throws InterruptedException {
-            AxonServo servo = new AxonServo(hardwareMap);
+            AxonServoContinous servo = new AxonServoContinous(hardwareMap);
+            servo.setRtp(true);
 
             waitForStart();
 
             while (!isStopRequested()) {
-                servo.update();
+                //servo.update();
 
                 // Manual controls for target and PID tuning
                 if (gamepad1.dpad_up) {
-                    servo.changeTargetRotation(15);
-                }
-                if (gamepad1.dpad_down) {
-                    servo.changeTargetRotation(-15);
-                }
-                if (gamepad1.cross) {
-                    servo.setTargetRotation(0);
+                    servo.setPower(0.5);
+                }else if (gamepad1.dpad_down) {
+                    servo.setPower(-0.5);
+                }else {
+                    servo.setPower(0.0);
                 }
 
-                if (gamepad1.x) {
-                    servo.setKP(servo.getKP() + 0.001);
-                }
-                if (gamepad1.y) {
-                    servo.setKP(Math.max(0, servo.getKP() - 0.001));
-                }
-
-                if (gamepad1.right_bumper) {
-                    servo.setKI(servo.getKI() + 0.0001);
-                }
-                if (gamepad1.left_bumper) {
-                    servo.setKI(Math.max(0, servo.getKI() - 0.0001));
-                }
-
-                if (gamepad1.touchpad) {
-                    servo.setKP(0.015);
-                    servo.setKI(0.0005);
-                    servo.setKD(0.0025);
-                    servo.resetPID();
-                }
+//                if (gamepad1.x) {
+//                    servo.setKP(servo.getKP() + 0.001);
+//                }
+//                if (gamepad1.y) {
+//                    servo.setKP(Math.max(0, servo.getKP() - 0.001));
+//                }
+//
+//                if (gamepad1.right_bumper) {
+//                    servo.setKI(servo.getKI() + 0.0001);
+//                }
+//                if (gamepad1.left_bumper) {
+//                    servo.setKI(Math.max(0, servo.getKI() - 0.0001));
+//                }
+//
+//                if (gamepad1.touchpad) {
+//                    servo.setKP(0.015);
+//                    servo.setKI(0.0005);
+//                    servo.setKD(0.0025);
+//                    servo.resetPID();
+//                }
 
                 telemetry.addData("Starting angle", servo.STARTPOS);
                 telemetry.addLine(servo.log());

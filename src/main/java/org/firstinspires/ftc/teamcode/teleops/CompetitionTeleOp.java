@@ -14,19 +14,25 @@ import java.util.Queue;
 
 import java.util.Arrays;
 
+import static org.firstinspires.ftc.teamcode.teleops.CompetitionTeleOp.RotationSetting.*;
+
 @TeleOp(name = "Competition TeleOp")
 public class CompetitionTeleOp extends OpModeBase {
     private boolean driving_field_centric = false;
-    private boolean is_auto_rotating = false;
-    private boolean is_manual_rotating = false;
     private boolean intaking = false;
     private boolean hasDetectedMotif = false;
     private pieceType[] motif = null;
     private double outtake_power = 0.0;
-
-    private boolean constant_rotation = false;
+    private RotationSetting rotationSetting = AutoRotate;
 
     private Queue<Command> commands_to_run = new LinkedList<>();
+
+    enum RotationSetting{
+        AutoAlignment,
+        AutoRotate,
+        ManualRotate,
+        ConstantRotate,
+    }
 
     @Override
     public void init() {
@@ -127,62 +133,64 @@ public class CompetitionTeleOp extends OpModeBase {
     }
 
     private void rotating() {
-        //constant rotation rotates the disk constantly
-        //manual rotation allow the user to adjust the rotation amount
-        //auto-rotation automatically rotates the disk 1 sector(1/3 of the disk) in the selected direction
+        switch (this.rotationSetting){
+            case AutoAlignment:
+                robot.getRotator().runMotor(-0.1);
+                if(robot.isRotatorAligned()){
+                    this.rotationSetting = AutoRotate;
+                    robot.getRotator().resetEncoder();
+                    robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
+                }
+                break;
+            case AutoRotate:
+                robot.getRotator().runMotorToPositionPID();
+//                if (robot.getRotator().isAtPosition()) {
+//                    this.rotationSetting = NoRotate;
+//                }
+                break;
+            case ManualRotate:
+                if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0) {
+                    this.rotationSetting = AutoRotate;
+                    robot.getRotator().resetEncoder();
+                    robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
+                }
+                break;
+            case ConstantRotate:
+                robot.getRotator().runMotor(-0.3);
+                break;
+        }
+
         if (gamepad1.yWasPressed()) {
-            constant_rotation = !constant_rotation;
-            if (!constant_rotation) {
+            if(this.rotationSetting == ConstantRotate){
+                this.rotationSetting = AutoRotate;
+            }else{
+                this.rotationSetting = ConstantRotate;
+            }
+            if (this.rotationSetting != ConstantRotate) {
                 robot.getRotator().setDiskRotation(true);
             }
         }
 
-        boolean setting_rotation = false;
         //rotating the disk to a specific position
         if (gamepad1.leftBumperWasReleased()) {
             //clockwise
             robot.getRotator().setDiskRotation(false);
-            is_auto_rotating = true;
+            this.rotationSetting = AutoRotate;
         } else if (gamepad1.rightBumperWasReleased()) {
             //counter clock wise
             robot.getRotator().setDiskRotation(true);
-            is_auto_rotating = true;
+            this.rotationSetting = AutoRotate;
         }
-        if (is_auto_rotating) {
-            setting_rotation = true;
-            robot.getRotator().runMotorToPosition(0.3);
-            if (robot.getRotator().isAtPosition()) {
-                is_auto_rotating = false;
-            }
-        }
-
 
         //manual rotation
         if (gamepad1.left_trigger != 0 || gamepad1.right_trigger != 0) {
-            is_auto_rotating = false;
-            constant_rotation = false;
-            is_manual_rotating = true;
-            setting_rotation = true;
+            this.rotationSetting = ManualRotate;
             robot.getRotator().runMotor((gamepad1.left_trigger - gamepad1.right_trigger));//*Rotator.MAX_SPEED);
         }
-        //if we are no longer doing manual input, but we were previously
-        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && is_manual_rotating) {
-            is_manual_rotating = false;
-            robot.getRotator().resetEncoder();
-            robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
-        }
 
-        if (constant_rotation) {
-            setting_rotation = true;
-            robot.getRotator().runMotor(-0.3);
-        }
-
-        if (!setting_rotation) {
-            robot.getRotator().runMotor(0.0);
-        }
-
-        if (!robot.getRotator().isAtPosition() && !is_manual_rotating && !constant_rotation) {
-            is_auto_rotating = true;
+        //will align to the magnet
+        if(gamepad1.right_stick_button && gamepad1.left_stick_button){
+            this.rotationSetting = AutoAlignment;
         }
     }
 
@@ -244,7 +252,7 @@ public class CompetitionTeleOp extends OpModeBase {
             raw_driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
 
-        if (gamepad1.leftBumperWasPressed()) {
+        if (gamepad2.leftBumperWasPressed()) {
             commands_to_run.add(new CorrectForAprilTag(robot));
             double dist = robot.getDistancesFromAprilTag()[0];
             if(dist>0) {
@@ -296,8 +304,7 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("AprilTag Ids found", Arrays.toString(robot.getIds()));
 
         telemetry.addData("Field Centric:", driving_field_centric);
-        telemetry.addData("manually_adjusting_disk:", is_manual_rotating);
-        telemetry.addData("rotating disk:", is_auto_rotating);
+        telemetry.addData("Rotation setting:", this.rotationSetting);
         telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
         try {
             //if (robot.getRotator().getPieceColor() != null) {

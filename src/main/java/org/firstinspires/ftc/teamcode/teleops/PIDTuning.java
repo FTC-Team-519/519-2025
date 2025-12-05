@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
+import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 
 @TeleOp(name = "Disk PID tuning")
 public class PIDTuning extends OpModeBase {
@@ -13,8 +14,8 @@ public class PIDTuning extends OpModeBase {
         super.init();
     }
 
-    private double p_coef = 0.01;
-    private double d_coef = -0.01;
+    private double p_coef = Rotator.POS_COEF;
+    private double d_coef = Rotator.DERIVATIVE_COEF;
 
     @Override
     public void loop() {
