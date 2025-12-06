@@ -187,13 +187,12 @@ public class Rotator {
     }
 
     public void setDiskRotation(boolean rotate_clock) {
-        double sector_size = (getEncoderClicksPerRotation() / 3);
+        double sector_size = (getEncoderClicksPerRotation() / 3.0);
         double current_sector = (motor.getCurrentPosition() / sector_size);
         if (!rotate_clock) {
             motor.setTargetPosition((int) ((Math.floor(current_sector + PRECISION/ sector_size) + 1 ) * sector_size));
         } else {
             motor.setTargetPosition((int) ((Math.ceil(current_sector - PRECISION/ sector_size) - 1 ) * sector_size));
         }
-        runMotor(); // will automatically stop b\c we are on RUN_USING_ENCODER
     }
 }

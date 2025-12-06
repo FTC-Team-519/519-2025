@@ -3,21 +3,19 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
-import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectForAprilTag;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveInDirection;
 import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import java.util.Arrays;
+import static org.firstinspires.ftc.teamcode.teleops.CompetitionTeleOpTest.RotationSetting.*;
 
-import static org.firstinspires.ftc.teamcode.teleops.CompetitionTeleOp.RotationSetting.*;
-
-@TeleOp(name = "Competition TeleOp")
-public class CompetitionTeleOp extends OpModeBase {
+@TeleOp(name = "Competition TeleOp Test", group = "test")
+public class CompetitionTeleOpTest extends OpModeBase {
     private boolean driving_field_centric = false;
     private boolean intaking = false;
     private boolean hasDetectedMotif = false;
@@ -96,7 +94,7 @@ public class CompetitionTeleOp extends OpModeBase {
 //            robot.stopStreaming();
 //        } else if (gamepad2.rightBumperWasPressed()) {
 //            robot.resumeStreaming();
-//        }FIXME:either remove this code or get it working b\c it crashes the robot
+//        }
 
         if(!hasDetectedMotif) {
             pieceType[] detMotif = robot.getMotif();
@@ -149,6 +147,9 @@ public class CompetitionTeleOp extends OpModeBase {
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
                     robot.getRotator().runMotorToPositionPID();
+                    if (gamepad2.right_stick_x != 0.0){
+                        robot.getKicker().runRotator(0.5);
+                    }
                 }else{
                     robot.getRotator().runMotor(0.0);
                 }
@@ -185,7 +186,7 @@ public class CompetitionTeleOp extends OpModeBase {
             this.rotationSetting = AutoRotate;
         } else if (gamepad2.rightBumperWasReleased()) {
             //counter clock wise
-            robot.getRotator().setDiskRotation(true);
+            robot.getRotator().setDiskRotation(true); //FIXME:If we rotate left then right with the bumpers then the robot crashs
             this.rotationSetting = AutoRotate;
         }
 

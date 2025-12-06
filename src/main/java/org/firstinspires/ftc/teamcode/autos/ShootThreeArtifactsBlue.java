@@ -20,9 +20,9 @@ public class ShootThreeArtifactsBlue extends OpModeBase {
         final double shoot_power = 0.67;
 
         this.seq = new SequentialCommandGroup(
-                MoveAndShootThreeArtifacts.init(robot)
+                MoveAndShootThreeArtifacts.init(robot),
 
-                //new DriveForward(40, robot)
+                new DriveForward(40, robot)
         );
         this.seq.init();
     }
