@@ -12,12 +12,12 @@ public class Rotator {
     public static final double CLICKS_PER_ROTATION = 751.8;
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
-    public final double PRECISION = 20; //unit is clicks
-    public final double POWER_CUTTOFF = 0.05;
-    public static final double MAX_SPEED = 0.5;
+    public final double PRECISION = 10; //unit is clicks
+    public final double POWER_CUTTOFF = 0.005;
+    public static final double MAX_SPEED = 0.3;
 
     //pid stuff
-    public static final double POS_COEF = 0.01;
+    public static final double POS_COEF = 0.005;
     public static final double DERIVATIVE_COEF = -0.20;
 
     private final DcMotor motor;
@@ -134,8 +134,11 @@ public class Rotator {
     }
 
     public void runMotor(double power) {
-
-        motor.setPower(RobotMath.clamp(power, -MAX_SPEED, MAX_SPEED));
+        if (Math.abs(power) > POWER_CUTTOFF) {
+            motor.setPower(RobotMath.clamp(power, -MAX_SPEED, MAX_SPEED));
+        }else{
+            motor.setPower(0.0); // so that it breaks and doens't make a horrible screeching noise
+        }
     }
 
     //needs to be called continually every loop
