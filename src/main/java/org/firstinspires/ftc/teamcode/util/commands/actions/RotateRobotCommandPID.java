@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 
 // CLOCKWISE IS NEGATIVE IMU, positive boolean is clockwise, negative is counterclockwise
 public class RotateRobotCommandPID implements Command {
-    private final double absTargetAngle;
-    private final boolean isClockwise;
+    private final double targetAngle;
     private final Robot robot;
 
     // PID coefficients (only P and D)
@@ -17,18 +17,15 @@ public class RotateRobotCommandPID implements Command {
     private double prevError = 0;
     private long prevTime = 0;
 
-    public RotateRobotCommandPID(double angle, boolean isClockwise, Robot robot, double kP, double kD) {
-        this.absTargetAngle = Math.abs(angle);
-        this.isClockwise = isClockwise;
-        this.robot = robot;
+    public RotateRobotCommandPID(double angle, Robot robot, double kP, double kD) {
+        this(angle, robot);
 
         this.kD = kD;
         this.kP = kP;
     }
 
-    public RotateRobotCommandPID(double angle, boolean isClockwise, Robot robot) {
-        this.absTargetAngle = Math.abs(angle);
-        this.isClockwise = isClockwise;
+    public RotateRobotCommandPID(double angle,Robot robot) {
+        this.targetAngle = RobotMath.trueMod(angle + robot.getYaw() + 180.0, 360) - 180;
         this.robot = robot;
     }
 
@@ -39,30 +36,32 @@ public class RotateRobotCommandPID implements Command {
     }
 
     public void run() {
-        double currentYaw = Math.abs(robot.getYaw());
-        double error = absTargetAngle - currentYaw;
+        double currentYaw = robot.getYaw();
 
-        long now = System.nanoTime();
-        double dt = (now - prevTime) / 1e9;
-        prevTime = now;
+        double error = Math.min(RobotMath.trueMod(targetAngle - currentYaw, 360.0), RobotMath.trueMod( currentYaw - targetAngle, 360.0));
 
-        double derivative = (error - prevError) / dt;
-        prevError = error;
+        double derivative = Math.abs(this.robot.getLeftBackDrive().getPower());
 
         double output = kP * error + kD * derivative;
 
         // Clamp output
         output = Math.max(-1.0, Math.min(1.0, output));
 
-        if (isClockwise) {
-            robot.rotateClockwise(Math.abs(output));
-        } else {
-            robot.rotateCounterClockwise(Math.abs(output));
+        boolean clockwise = true;
+
+
+        if (clockwise){
+            robot.rotateClockwise(output);
+        }else{
+            robot.rotateClockwise(-output);
         }
     }
 
     public boolean isDone() {
-        return Math.abs(robot.getYaw()) >= absTargetAngle;
+        double currentYaw = robot.getYaw();
+
+        double error = Math.min(RobotMath.trueMod(targetAngle - currentYaw, 360.0), RobotMath.trueMod( currentYaw - targetAngle, 360.0));
+        return (error <= 5) && (Math.abs(robot.getLeftBackDrive().getPower()) < 0.05);
     }
 
     public void shutdown() {
