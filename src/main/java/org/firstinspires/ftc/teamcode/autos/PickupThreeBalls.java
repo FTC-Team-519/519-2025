@@ -12,23 +12,15 @@ import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 public class PickupThreeBalls {
 
     public static Command init(Robot robot) {
-        return new SequentialCommandGroup(
-                new AlignRotator(robot),
-                new ParallelCommandGroup(
-                        new IntakeCommand(5.5, 1.0, robot),
-                        new SequentialCommandGroup(
-                                new DriveForward(8, 0.1, robot),
-                                new ParallelCommandGroup(
-                                        new DriveForward(8, 0.1, robot),
-                                        new DiskRotatePID(robot, true)
-                                ),
-                                new ParallelCommandGroup(
-                                        new SequentialCommandGroup(
-                                                new TimerCommand(0.1),
-                                                new DriveForward(8, 0.1, robot)
-                                        ),
-                                        new DiskRotatePID(robot, true)
-                                )
+        final double drive_speed = 0.1;
+        return new ParallelCommandGroup(
+                new IntakeCommand(5.5, 1.0, robot),
+                new SequentialCommandGroup(
+                        new DriveForward(8, drive_speed, robot),
+                        new ParallelCommandGroup(
+                                new DriveForward(8, drive_speed, robot),
+                                new DiskRotatePID(robot, true),
+                                new DiskRotatePID(robot, true)
                         )
                 )
         );

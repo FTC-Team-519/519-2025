@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.AlignRotator;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveForward;
 import org.firstinspires.ftc.teamcode.util.commands.actions.RotateRobotCommand;
+import org.firstinspires.ftc.teamcode.util.commands.actions.RotateRobotCommandPID;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
 @Autonomous(name = "ShootThreeArtifactsFarBlue")

@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveForward;
 import org.firstinspires.ftc.teamcode.util.commands.actions.RotateRobotCommand;
+import org.firstinspires.ftc.teamcode.util.commands.actions.RotateRobotCommandPID;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
 @Autonomous(name = "ShootSixArtifactsRed")
@@ -19,13 +20,14 @@ public class ShootSixArtifactsRed extends OpModeBase {
         super.init();
         final double shoot_power = 0.52;
         final double turn_first_balls = 150;
+        final double rotate_speed = 0.5;
         this.seq = new SequentialCommandGroup(
                 MoveAndShootThreeArtifacts.init(robot),
-                new RotateRobotCommand(turn_first_balls, false, 0.8, robot),
+                new RotateRobotCommand(turn_first_balls, false, rotate_speed, robot),
                 new DriveForward(10, 1.0, robot),
                 PickupThreeBalls.init(robot),
-                new DriveForward(-10, 1.0, robot),
-                new RotateRobotCommand(180-turn_first_balls, false, 0.8, robot),
+                new RotateRobotCommand(180-turn_first_balls, false, rotate_speed, robot),
+                new DriveForward(10, 1.0, robot),
                 ShootThreeArtifacts.init(robot, shoot_power)
                 //new DriveForward(40, 1.0, robot)
         );
