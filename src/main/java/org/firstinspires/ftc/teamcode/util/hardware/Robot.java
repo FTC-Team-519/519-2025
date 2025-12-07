@@ -44,7 +44,8 @@ public class Robot {
         outtake = new Outtake(hardwareMap);
         rotator = new Rotator(hardwareMap);
         kicker = new Kicker(hardwareMap);
-        camera = new RobotCamera(hardwareMap);
+        camera = new RobotCamera(hardwareMap,"camera");
+        //motifCam = new RobotCamera(hardwareMap,"motifCam");
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -86,9 +87,11 @@ public class Robot {
 
     public int[] getIds() {return camera.getIDs();}
 
+    //FIXME: this code might crash the robot so I coded it out
     public void stopStreaming() {camera.stopStreaming();}
 
-    public void resumeStreaming() {camera.resumeStreaming();}
+    public void resumeStreaming() {}//camera.resumeStreaming();
+    //public void stopMotifStreaming() {motifCam.stopStreaming();}
 
     public DcMotor getIntakeMotor() {
         return intakeMotor;

@@ -27,7 +27,7 @@ public class IntakeCommand implements Command {
 
     @Override
     public boolean isDone() {
-        return robot.getRotator().doesIntakeContainPiece() || timeout_seconds.isDone();
+        return timeout_seconds.isDone();//return robot.getRotator().doesIntakeContainPiece() || timeout_seconds.isDone();
     }
 
     @Override

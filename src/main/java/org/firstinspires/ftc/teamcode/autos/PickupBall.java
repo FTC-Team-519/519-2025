@@ -5,35 +5,30 @@ import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.AlignRotator;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveForward;
-import org.firstinspires.ftc.teamcode.util.commands.actions.RotateRobotCommand;
+import org.firstinspires.ftc.teamcode.util.commands.actions.IntakeCommand;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
-@Autonomous(name = "ShootThreeArtifactsFarBlue")
-public class ShootThreeArtifactsFarBlue extends OpModeBase {
+// Jonah was here
+@Autonomous(name="Pickup Ball")
+public class PickupBall extends OpModeBase {
 
     private Command seq;
 
     private boolean is_done = false;
 
     @Override
-    public void init() {
+    public void init(){
         super.init();
-        final double shoot_power = 0.90; //FIXME: TUNE PLEASE
 
-        this.seq = new SequentialCommandGroup(
-                new DriveForward(12.0, 1.0, robot),
-                new AlignRotator(robot),
-                new RotateRobotCommand(Math.PI, true, 0.3, robot),
-                ShootThreeArtifacts.init(robot, shoot_power)
-        );
+        this.seq = new SequentialCommandGroup(new IntakeCommand(1.5, 1.0, robot));
         this.seq.init();
     }
 
     @Override
     public void loop() {
-        if (!seq.isDone() && !is_done) {
+        if (!seq.isDone() && !is_done){
             seq.run();
-        } else {
+        }else{
             is_done = true;
             seq.shutdown();
         }

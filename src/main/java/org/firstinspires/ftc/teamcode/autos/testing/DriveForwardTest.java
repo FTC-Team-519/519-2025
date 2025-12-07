@@ -14,7 +14,7 @@ public class DriveForwardTest extends OpModeBase {
         super.init();
 
         this.seq = new SequentialCommandGroup(
-                new DriveForward(12,robot)
+                new DriveForward(12, 1.0,robot)
         );
     }
     @Override

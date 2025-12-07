@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
+import org.firstinspires.ftc.teamcode.util.commands.actions.AlignRotator;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveForward;
+import org.firstinspires.ftc.teamcode.util.commands.command_groups.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
 // Jonah was here
@@ -18,7 +20,7 @@ public class DriveForward2Feet extends OpModeBase {
     public void init(){
         super.init();
 
-        this.seq = new SequentialCommandGroup(new DriveForward(24, robot));
+        this.seq = new SequentialCommandGroup(new DriveForward(24, 1.0, robot ), new AlignRotator(robot));
         this.seq.init();
     }
 

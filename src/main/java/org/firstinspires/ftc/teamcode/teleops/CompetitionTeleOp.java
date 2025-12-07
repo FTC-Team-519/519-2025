@@ -103,7 +103,8 @@ public class CompetitionTeleOp extends OpModeBase {
             if (detMotif != null) {
                 motif = detMotif;
                 hasDetectedMotif = true;
-            }
+//                robot.stopMotifStreaming();
+           }
         }
     }
 
@@ -257,10 +258,10 @@ public class CompetitionTeleOp extends OpModeBase {
             raw_driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
 
-        if (gamepad2.leftBumperWasPressed()) {
+        if (gamepad1.leftBumperWasPressed()) {
             commands_to_run.add(new CorrectForAprilTag(robot));
             double dist = robot.getDistancesFromAprilTag()[0];
-            if(dist>0) {
+            if(dist<0) {
                 commands_to_run.add(new DriveInDirection(dist, 1.0 / 4 * Math.PI, robot));
             } else {
                 commands_to_run.add(new DriveInDirection(dist, -3.0 / 4 * Math.PI,robot));

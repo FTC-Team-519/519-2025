@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCom
 
 public class MoveAndShootThreeArtifacts {
     public static Command init(Robot robot) {
-        final double shoot_power = 0.48; //58 is good for teleop
+        final double shoot_power = 0.52; //58 is good for teleop
 
         return new SequentialCommandGroup(
                 new DriveInDirection(36 * 6.0 / 5.0, 3.0 * Math.PI / 4.0, robot),

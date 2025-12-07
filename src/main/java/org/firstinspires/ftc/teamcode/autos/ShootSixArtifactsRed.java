@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
-import org.firstinspires.ftc.teamcode.util.commands.actions.*;
+import org.firstinspires.ftc.teamcode.util.commands.actions.DriveForward;
+import org.firstinspires.ftc.teamcode.util.commands.actions.RotateRobotCommand;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
-import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 
-@Autonomous(name = "ShootThreeArtifactsBlue")
-public class ShootThreeArtifactsBlue extends OpModeBase {
+@Autonomous(name = "ShootSixArtifactsRed")
+public class ShootSixArtifactsRed extends OpModeBase {
 
     private Command seq;
 
@@ -17,12 +17,17 @@ public class ShootThreeArtifactsBlue extends OpModeBase {
     @Override
     public void init(){
         super.init();
-        final double shoot_power = 0.67;
-
+        final double shoot_power = 0.52;
+        final double turn_first_balls = 150;
         this.seq = new SequentialCommandGroup(
                 MoveAndShootThreeArtifacts.init(robot),
-
-                new DriveForward(40, 1.0, robot)
+                new RotateRobotCommand(turn_first_balls, false, 0.8, robot),
+                new DriveForward(10, 1.0, robot),
+                PickupThreeBalls.init(robot),
+                new DriveForward(-10, 1.0, robot),
+                new RotateRobotCommand(180-turn_first_balls, false, 0.8, robot),
+                ShootThreeArtifacts.init(robot, shoot_power)
+                //new DriveForward(40, 1.0, robot)
         );
         this.seq.init();
     }

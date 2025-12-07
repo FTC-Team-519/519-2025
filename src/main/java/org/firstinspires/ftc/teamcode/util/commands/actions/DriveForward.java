@@ -8,12 +8,14 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 public class DriveForward implements Command {
     private final double distance;
     private final Robot robot;
+    private double power;
 
-    public DriveForward(double inches, Robot robot) {
+    public DriveForward(double inches, double power, Robot robot) {
         distance = inches*Robot.getCountsPerInchForDriveMotors()/2;
 
         // init robot
         this.robot = robot;
+        this.power = power;
     }
 
     public void init() {
@@ -24,9 +26,9 @@ public class DriveForward implements Command {
     //    @Override
     public void run() {
         if(distance>=0) {
-            this.robot.setAllDrivePower(1.0);
+            this.robot.setAllDrivePower(power);
         } else {
-            this.robot.setAllDrivePower(-1.0);
+            this.robot.setAllDrivePower(-power);
         }
     }
 

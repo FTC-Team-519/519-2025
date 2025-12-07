@@ -27,14 +27,15 @@ public class DiskRotatePID implements Command {
 
     @Override
     public boolean isDone() {
-        if (robot.getRotator().isAtPosition() ){
-            if (waitTimer == null){
-                waitTimer = new TimerCommand(0.001);
-            }else{
-                return waitTimer.isDone();
-            }
-        }
-        return false;
+        return robot.getRotator().isAtPosition();
+//        if (robot.getRotator().isAtPosition() ){
+//            if (waitTimer == null){
+//                waitTimer = new TimerCommand(0.001);
+//            }else{
+//                return waitTimer.isDone();
+//            }
+//        }
+//        return false;
     }
 
     @Override
