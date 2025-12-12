@@ -96,7 +96,7 @@ public class CompetitionTeleOp extends OpModeBase {
 //            robot.stopStreaming();
 //        } else if (gamepad2.rightBumperWasPressed()) {
 //            robot.resumeStreaming();
-//        }FIXME:either remove this code or get it working b\c it crashes the robot
+//        } FIXME:either remove this code or get it working b\c it crashes the robot
 
         if(!hasDetectedMotif) {
             pieceType[] detMotif = robot.getMotif();
@@ -123,7 +123,7 @@ public class CompetitionTeleOp extends OpModeBase {
             outtake_power = 0.6;
         }
         if(gamepad2.bWasPressed() && Arrays.stream(robot.getIds()).anyMatch((i)-> i==20 || i ==24)) {
-            outtake_power = 0.8*RobotMath.outPower(robot.getDistancesFromAprilTag()[1]); // 0.016 being our untested distance {FIXME: Set to a final variable}
+            outtake_power = RobotMath.outPower(robot.getDistancesFromAprilTag()[1]); // 0.016 being our untested distance {FIXME: Set to a final variable}
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);

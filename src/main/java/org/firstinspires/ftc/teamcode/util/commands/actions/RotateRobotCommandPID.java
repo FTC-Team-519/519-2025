@@ -11,8 +11,8 @@ public class RotateRobotCommandPID implements Command {
     private final Robot robot;
 
     // PID coefficients (only P and D)
-    private double kP = 0.015; // tune
-    private double kD = 0.003; // tune
+    private double kP = 0.02; // tune
+    private double kD = -0.01; // tune
 
     private double prevError = 0;
     private long prevTime = 0;
@@ -47,10 +47,8 @@ public class RotateRobotCommandPID implements Command {
         // Clamp output
         output = Math.max(-1.0, Math.min(1.0, output));
 
-        boolean clockwise = true;
 
-
-        if (clockwise){
+        if (RobotMath.trueMod(targetAngle - currentYaw, 360.0) > RobotMath.trueMod( currentYaw - targetAngle, 360.0)){
             robot.rotateClockwise(output);
         }else{
             robot.rotateClockwise(-output);

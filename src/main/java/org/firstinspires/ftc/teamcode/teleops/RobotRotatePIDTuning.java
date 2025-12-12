@@ -21,7 +21,7 @@ public class RobotRotatePIDTuning extends OpModeBase {
 
     private Queue<Command> commands_to_run = new LinkedList<>();
     private double d_coef = -0.01;
-    private double p_coef = 0.01;
+    private double p_coef = 0.02;
     private double targetAngle = 0.0;
 
     @Override
