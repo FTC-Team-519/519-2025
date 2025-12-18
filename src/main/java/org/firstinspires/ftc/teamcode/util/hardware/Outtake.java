@@ -14,6 +14,12 @@ public class Outtake {
 
         LeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         RightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        LeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        LeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public DcMotor getLeftMotor() {return LeftMotor;}
@@ -23,6 +29,4 @@ public class Outtake {
         LeftMotor.setPower(power);
         RightMotor.setPower(power/1.1); //this will help the robot shoot straighter
     }
-
-
 }

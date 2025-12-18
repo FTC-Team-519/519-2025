@@ -110,11 +110,11 @@ public class CompetitionTeleOp extends OpModeBase {
 
     private void outtake() {
         if (gamepad2.dpadUpWasReleased()) {
-            outtake_power += 0.02;
+            outtake_power += 0.001;
         }
 
         if (gamepad2.dpadDownWasReleased()) {
-            outtake_power -= 0.02;
+            outtake_power -= 0.001;
         }
         if (gamepad2.xWasReleased()) {
             outtake_power = 0.0;
@@ -127,8 +127,6 @@ public class CompetitionTeleOp extends OpModeBase {
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
-
-
     }
 
     private void kicking() {

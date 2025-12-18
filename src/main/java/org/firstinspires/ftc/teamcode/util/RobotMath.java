@@ -131,7 +131,7 @@ public class RobotMath {
     }
 
     public static double outPower(double dist) {
-        if(dist<=40) return 0.62;
+        if (dist <= 40) return 0.62;
         return 0.00265359 * (dist - 40) + 0.62; // magic numbers moment
     }
 }
