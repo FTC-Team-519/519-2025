@@ -21,7 +21,6 @@ public class CompetitionTeleOp extends OpModeBase {
     private boolean driving_field_centric = false;
     private boolean intaking = false;
     private boolean hasDetectedMotif = false;
-    private pieceType[] motif = null;
     private double outtake_power = 0.0;
     private RotationSetting rotationSetting = AutoRotate;
 
@@ -98,13 +97,14 @@ public class CompetitionTeleOp extends OpModeBase {
 //            robot.resumeStreaming();
 //        } FIXME:either remove this code or get it working b\c it crashes the robot
 
-        if(motif == null) {
-            pieceType[] detMotif = robot.getMotif();
-            if (detMotif != null) {
-                motif = detMotif;
-                robot.stopMotifStreaming();
-           }
-        }
+//        if(motif == null) {
+//            pieceType[] detMotif = robot.getMotif();
+//            if (detMotif != null) {
+//                motif = detMotif;
+//                robot.stopMotifStreaming();
+//           }
+//        }
+        robot.updateMotif();
     }
 
     private void outtake() {
@@ -312,7 +312,7 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
         telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
         telemetry.addData("motor_power", robot.getRotator().getMotor().getPower());
-        telemetry.addData("Current Motif",Arrays.toString(motif));
+        telemetry.addData("Current Motif",Arrays.toString(robot.getMotif()));
 
 
         try {

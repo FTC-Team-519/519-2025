@@ -67,4 +67,8 @@ public class IntakeColorSensor {
             return p1;
         }
     }
+
+    public static pieceType[] defaultMotif(){
+        return new pieceType[]{pieceType.PURPLE, pieceType.PURPLE, pieceType.GREEN};
+    }
 }

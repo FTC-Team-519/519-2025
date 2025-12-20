@@ -25,7 +25,7 @@ public class ShootThreeArtifactsFarBlue extends OpModeBase {
                 new DriveForward(12.0, 1.0, robot),
                 new AlignRotator(robot),
                 new RotateRobotCommand(Math.PI, true, 0.3, robot),
-                ShootThreeArtifacts.init(robot, shoot_power)
+                new ShootThreeArtifacts(robot, shoot_power)
         );
         this.seq.init();
     }

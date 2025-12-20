@@ -135,7 +135,7 @@ public class Robot {
 
     public void updateMotif() {
         if(motif==null) {
-            pieceType[] detMotif = camera.getMotif();
+            pieceType[] detMotif = motifCam.getMotif();
             if (detMotif != null) {
                 motif = detMotif;
                 stopMotifStreaming();

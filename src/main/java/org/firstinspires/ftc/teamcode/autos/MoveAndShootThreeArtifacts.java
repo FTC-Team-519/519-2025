@@ -16,7 +16,7 @@ public class MoveAndShootThreeArtifacts {
                         new DriveInDirection(36 * 6.0 / 5.0, 3.0 * Math.PI / 4.0, robot),
                         new AlignRotator(robot)
                 ),
-                ShootThreeArtifacts.init(robot, shoot_power)
+                new ShootThreeArtifacts(robot, shoot_power)
         );
     }
 }
