@@ -9,7 +9,10 @@ import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCom
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 
 // Jonah was here
-public class PickupThreeBalls {
+@Autonomous(name = "pickup three balls")
+public class PickupThreeBalls extends OpModeBase{
+
+    private Command command;
 
     public static Command init(Robot robot) {
         final double drive_speed = 0.25;
@@ -18,5 +21,15 @@ public class PickupThreeBalls {
                 new DriveForward(27, drive_speed, robot),
                 new DiskRotatePID(robot, 9)
         );
+    }
+
+    @Override
+    public void init() {
+        this.command = PickupThreeBalls.init(robot);
+    }
+
+    @Override
+    public void loop() {
+
     }
 }
