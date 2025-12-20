@@ -18,16 +18,15 @@ public class ShootSixArtifactsRed extends OpModeBase {
     @Override
     public void init(){
         super.init();
-        final double shoot_power = 0.52;
-        final double turn_first_balls = 150;
-        final double rotate_speed = 0.5;
+        final double shoot_power = 0.60;
+        final double turn_first_balls = 163;
         this.seq = new SequentialCommandGroup(
                 MoveAndShootThreeArtifacts.init(robot),
-                new RotateRobotCommand(turn_first_balls, false, rotate_speed, robot),
-                new DriveForward(10, 1.0, robot),
+                new RotateRobotCommandPID(turn_first_balls, robot),
+                new DriveForward(8, 1.0, robot),
                 PickupThreeBalls.init(robot),
-                new RotateRobotCommand(180-turn_first_balls, false, rotate_speed, robot),
-                new DriveForward(10, 1.0, robot),
+                new RotateRobotCommandPID(360-turn_first_balls, robot),
+                new DriveForward(16, 1.0, robot),
                 ShootThreeArtifacts.init(robot, shoot_power)
                 //new DriveForward(40, 1.0, robot)
         );

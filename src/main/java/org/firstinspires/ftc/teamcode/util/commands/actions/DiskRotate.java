@@ -6,20 +6,26 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 public class DiskRotate implements Command {
 
     private final Robot robot;
-    private final boolean clockwise;
+    private final int rotate_sectors;
     private final double power;
 
     private TimerCommand waitTimer;
 
     public DiskRotate(Robot robot, boolean clockwise, double power) {
         this.robot = robot;
-        this.clockwise = clockwise;
+        this.rotate_sectors = clockwise?1:-1;
+        this.power = power;
+    }
+
+    public DiskRotate(Robot robot, int rotate_sectors, double power) {
+        this.robot = robot;
+        this.rotate_sectors = rotate_sectors;
         this.power = power;
     }
 
     @Override
     public void init() {
-        robot.getRotator().setDiskRotation(clockwise);
+        robot.getRotator().setDiskRotation(rotate_sectors);
     }
 
     @Override

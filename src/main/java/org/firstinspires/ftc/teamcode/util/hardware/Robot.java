@@ -206,7 +206,7 @@ public class Robot {
     }
     public void getReadyToKick() {
         kicker.runEngager(false);
-        kicker.runRotator(0.5d); // FIXME: Get a good speed
+        kicker.runRotator(1.0d); // FIXME: Get a good speed
     }
 
     public void changeKicking() {

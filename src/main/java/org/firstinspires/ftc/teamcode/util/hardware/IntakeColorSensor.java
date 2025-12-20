@@ -39,7 +39,7 @@ public class IntakeColorSensor {
     public float[] get_hsv(){
         float[] hsv = new float[3];
         int[] rgb = get_rgb();
-        Color.RGBToHSV(rgb[0], rgb[1], rgb[2], hsv);
+        Color.RGBToHSV(rgb[0] * 8, rgb[1] * 8, rgb[2] * 8, hsv);
         return hsv;
     }
 

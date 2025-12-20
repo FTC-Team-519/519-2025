@@ -110,11 +110,11 @@ public class CompetitionTeleOp extends OpModeBase {
 
     private void outtake() {
         if (gamepad2.dpadUpWasReleased()) {
-            outtake_power += 0.001;
+            outtake_power += 0.02;
         }
 
         if (gamepad2.dpadDownWasReleased()) {
-            outtake_power -= 0.001;
+            outtake_power -= 0.02;
         }
         if (gamepad2.xWasReleased()) {
             outtake_power = 0.0;
@@ -309,21 +309,7 @@ public class CompetitionTeleOp extends OpModeBase {
 
         telemetry.addData("Field Centric:", driving_field_centric);
         telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
-//        try {
-//            //if (robot.getRotator().getPieceColor() != null) {
-//            telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
-//            telemetry.addData("color sensor 1 rgb", Arrays.toString(robot.getRotator().getColorSensor1().get_rgb()));
-//            telemetry.addData("color sensor 1 hsv", Arrays.toString(robot.getRotator().getColorSensor1().get_hsv()));
-//            telemetry.addData("color sensor 1 distance", robot.getRotator().getColorSensor1().get_distance_inch());
-//            telemetry.addData("color sensor 1 sensing", robot.getRotator().getColorSensor1().get_piece());
-//            telemetry.addData("color sensor 2 rgb", Arrays.toString(robot.getRotator().getColorSensor2().get_rgb()));
-//            telemetry.addData("color sensor 2 hsv", Arrays.toString(robot.getRotator().getColorSensor2().get_hsv()));
-//            telemetry.addData("color sensor 2 distance", robot.getRotator().getColorSensor2().get_distance_inch());
-//            telemetry.addData("color sensor 2 sensing", robot.getRotator().getColorSensor2().get_piece());
-//            //}
-//        } catch (NullPointerException ignored) {
-//
-//        }
+        telemetry.addData("outtake right power:", robot.getOuttake().getRightMotor().getPower());
 
         telemetry.addData("Rotation setting:", this.rotationSetting);
         telemetry.addData("current disk pos: ", robot.getRotator().getEncoderPosition());
@@ -331,6 +317,23 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
         telemetry.addData("motor_power", robot.getRotator().getMotor().getPower());
         telemetry.addData("Current Motif",Arrays.toString(motif));
+
+
+        try {
+            //if (robot.getRotator().getPieceColor() != null) {
+            telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
+            telemetry.addData("color sensor 1 rgb", Arrays.toString(robot.getRotator().getColorSensor1().get_rgb()));
+            telemetry.addData("color sensor 1 hsv", Arrays.toString(robot.getRotator().getColorSensor1().get_hsv()));
+            telemetry.addData("color sensor 1 distance", robot.getRotator().getColorSensor1().get_distance_inch());
+            telemetry.addData("color sensor 1 sensing", robot.getRotator().getColorSensor1().get_piece());
+            telemetry.addData("color sensor 2 rgb", Arrays.toString(robot.getRotator().getColorSensor2().get_rgb()));
+            telemetry.addData("color sensor 2 hsv", Arrays.toString(robot.getRotator().getColorSensor2().get_hsv()));
+            telemetry.addData("color sensor 2 distance", robot.getRotator().getColorSensor2().get_distance_inch());
+            telemetry.addData("color sensor 2 sensing", robot.getRotator().getColorSensor2().get_piece());
+            //}
+        } catch (NullPointerException ignored) {
+
+        }
         telemetry.update();
     }
 }

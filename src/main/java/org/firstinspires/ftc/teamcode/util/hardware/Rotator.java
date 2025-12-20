@@ -13,12 +13,12 @@ public class Rotator {
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
     public final double PRECISION = 10; //unit is clicks
-    public final double POWER_CUTTOFF = 0.005;
+    public final double POWER_CUTTOFF = 0.01;
     public static final double MAX_SPEED = 0.3;
 
     //pid stuff
-    public static final double POS_COEF = 0.005;
-    public static final double DERIVATIVE_COEF = -0.20;
+    public static final double POS_COEF = 0.01;
+    public static final double DERIVATIVE_COEF = -0.25;
 
     private final DcMotor motor;
 
@@ -187,12 +187,20 @@ public class Rotator {
     }
 
     public void setDiskRotation(boolean rotate_clock) {
+        if (rotate_clock) {
+            setDiskRotation(1);
+        } else {
+            setDiskRotation(-1);
+        }
+    }
+
+    public void setDiskRotation(int rotate_sections) {
         double sector_size = (getEncoderClicksPerRotation() / 3.0);
         double current_sector = (motor.getCurrentPosition() / sector_size);
-        if (!rotate_clock) {
-            motor.setTargetPosition((int) ((Math.floor(current_sector + PRECISION/ sector_size) + 1 ) * sector_size));
+        if (rotate_sections<0) {
+            motor.setTargetPosition((int) ((Math.floor(current_sector + (PRECISION)/ sector_size) + Math.abs(rotate_sections)) * sector_size));
         } else {
-            motor.setTargetPosition((int) ((Math.ceil(current_sector - PRECISION/ sector_size) - 1 ) * sector_size));
+            motor.setTargetPosition((int) ((Math.ceil(current_sector - (PRECISION) / sector_size) - Math.abs(rotate_sections) ) * sector_size));
         }
     }
 }
