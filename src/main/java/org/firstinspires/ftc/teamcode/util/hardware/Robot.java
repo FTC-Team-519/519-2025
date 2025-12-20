@@ -24,6 +24,8 @@ public class Robot {
     private final int cameraID = 0;
 
     private final RobotCamera motifCam;
+
+    private pieceType[] motif = null;
     private final int motifCamID = 0;
 
     public Outtake getOuttake() {
@@ -129,7 +131,17 @@ public class Robot {
         return rotator.fixCurrentArtifacts(motif);
     }
 
-    public pieceType[] getMotif() {return motifCam.getMotif();}
+    public pieceType[] getMotif() {return motif;}
+
+    public void updateMotif() {
+        if(motif==null) {
+            pieceType[] detMotif = camera.getMotif();
+            if (detMotif != null) {
+                motif = detMotif;
+                stopMotifStreaming();
+            }
+        }
+    }
 
     public void stopMotifStreaming() {motifCam.stopStreaming();}
 
