@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectForAprilTag;
 import org.firstinspires.ftc.teamcode.util.commands.actions.DriveInDirection;
 import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType;
+import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -24,6 +25,10 @@ public class CompetitionTeleOpTest extends OpModeBase {
     private RotationSetting rotationSetting = AutoRotate;
 
     private Queue<Command> commands_to_run = new LinkedList<>();
+
+
+    private double p_coef = Rotator.POS_COEF;
+    private double d_coef = Rotator.DERIVATIVE_COEF;
 
     enum RotationSetting{
         AutoAlignment,
@@ -106,13 +111,13 @@ public class CompetitionTeleOpTest extends OpModeBase {
     }
 
     private void outtake() {
-        if (gamepad2.dpadUpWasReleased()) {
-            outtake_power += 0.02;
-        }
-
-        if (gamepad2.dpadDownWasReleased()) {
-            outtake_power -= 0.02;
-        }
+//        if (gamepad2.dpadUpWasReleased()) {
+//            outtake_power += 0.02;
+//        }
+//
+//        if (gamepad2.dpadDownWasReleased()) {
+//            outtake_power -= 0.02;
+//        }
         if (gamepad2.xWasReleased()) {
             outtake_power = 0.0;
         }
@@ -146,7 +151,7 @@ public class CompetitionTeleOpTest extends OpModeBase {
                 break;
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
-                    robot.getRotator().runMotorToPositionPID();
+                    robot.getRotator().runMotorToPositionPID(p_coef, d_coef);
                     if (gamepad2.right_stick_x != 0.0){
                         robot.getKicker().runRotator(0.5);
                     }
@@ -200,6 +205,22 @@ public class CompetitionTeleOpTest extends OpModeBase {
             this.rotationSetting = AutoAlignment;
         }
 
+        //code for pid tuning
+        if (gamepad2.dpadUpWasPressed()){
+            p_coef += 0.001;
+        }
+        if (gamepad2.dpadDownWasPressed()){
+            p_coef -= 0.001;
+        }
+        if (gamepad2.dpadRightWasPressed()){
+            d_coef += 0.01;
+        }
+        if (gamepad2.dpadLeftWasPressed()){
+            d_coef -= 0.01;
+        }
+
+        p_coef = RobotMath.clamp(p_coef, 0.0, 1.0);
+        d_coef = RobotMath.clamp(d_coef, -1.0, 0.0);
     }
 
     private void intake() {
@@ -299,7 +320,8 @@ public class CompetitionTeleOpTest extends OpModeBase {
     private void telemetry() {
 
         double[] distanceArray = robot.getDistancesFromAprilTag();
-
+        telemetry.addData("p_coef", p_coef);
+        telemetry.addData("d_coef", d_coef);
         telemetry.addData("magnet seeing", robot.getRotator().isAligned());
 
         telemetry.addData("X Offset", distanceArray[0]);

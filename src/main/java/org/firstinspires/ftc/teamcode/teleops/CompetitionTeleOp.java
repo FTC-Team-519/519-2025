@@ -148,6 +148,9 @@ public class CompetitionTeleOp extends OpModeBase {
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
                     robot.getRotator().runMotorToPositionPID();
+                    if (gamepad2.right_stick_x != 0.0){
+                        robot.getKicker().runRotator(0.5);
+                    }
                 }else{
                     robot.getRotator().runMotor(0.0);
                 }

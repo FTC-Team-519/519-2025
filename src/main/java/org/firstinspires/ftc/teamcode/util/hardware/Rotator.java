@@ -13,12 +13,12 @@ public class Rotator {
     public final double GEAR_RATIO = 2.0;
     //might need to tweak
     public final double PRECISION = 10; //unit is clicks
-    public final double POWER_CUTTOFF = 0.01;
+    public final double POWER_CUTTOFF = 0.05;
     public static final double MAX_SPEED = 0.3;
 
     //pid stuff
-    public static final double POS_COEF = 0.01;
-    public static final double DERIVATIVE_COEF = -0.25;
+    public static final double POS_COEF = 0.007;
+    public static final double DERIVATIVE_COEF = -0.40;
 
     private final DcMotor motor;
 
