@@ -260,12 +260,6 @@ public class CompetitionTeleOp extends OpModeBase {
 
         if (gamepad1.leftBumperWasPressed()) {
             commands_to_run.add(new CorrectForAprilTag(robot));
-            double dist = robot.getDistancesFromAprilTag()[0];
-            if(dist<0) {
-                commands_to_run.add(new DriveInDirection(dist, 1.0 / 4 * Math.PI, robot));
-            } else {
-                commands_to_run.add(new DriveInDirection(dist, -3.0 / 4 * Math.PI,robot));
-            }
         }
 
 
