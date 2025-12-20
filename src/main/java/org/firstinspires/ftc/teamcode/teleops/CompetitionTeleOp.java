@@ -98,11 +98,10 @@ public class CompetitionTeleOp extends OpModeBase {
 //            robot.resumeStreaming();
 //        } FIXME:either remove this code or get it working b\c it crashes the robot
 
-        if(!hasDetectedMotif) {
+        if(motif == null) {
             pieceType[] detMotif = robot.getMotif();
             if (detMotif != null) {
                 motif = detMotif;
-                hasDetectedMotif = true;
                 robot.stopMotifStreaming();
            }
         }
