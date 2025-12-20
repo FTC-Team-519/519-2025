@@ -14,6 +14,7 @@ public abstract class OpModeBase extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
+        robot.resumeMotifStreaming();
     }
 
     @Override

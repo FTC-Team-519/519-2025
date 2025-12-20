@@ -12,12 +12,13 @@ public class RobotCamera {
     private final AprilTagProcessor camera;
     private final VisionPortal visionPortal;
 
-    public RobotCamera(HardwareMap hardwareMap, String name) {
+    public RobotCamera(HardwareMap hardwareMap, String name, int camID) {
         camera = AprilTagProcessor.easyCreateWithDefaults(); // create our processor
-        visionPortal = VisionPortal.easyCreateWithDefaults( // create our "camera" with a webcam and processor
-                hardwareMap.get(WebcamName.class, name),
-                camera
-        );
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class,name))
+                .addProcessor(camera)
+                .setLiveViewContainerId(camID)
+                .build();
         visionPortal.resumeStreaming(); // start streaming because it may have been stopped logically
     }
 

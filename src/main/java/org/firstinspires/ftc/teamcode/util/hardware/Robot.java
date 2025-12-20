@@ -21,6 +21,10 @@ public class Robot {
     private final Rotator rotator;
 
     private final RobotCamera camera;
+    private final int cameraID = 0;
+
+    private final RobotCamera motifCam;
+    private final int motifCamID = 0;
 
     public Outtake getOuttake() {
         return outtake;
@@ -44,8 +48,8 @@ public class Robot {
         outtake = new Outtake(hardwareMap);
         rotator = new Rotator(hardwareMap);
         kicker = new Kicker(hardwareMap);
-        camera = new RobotCamera(hardwareMap,"camera");
-        //motifCam = new RobotCamera(hardwareMap,"motifCam");
+        camera = new RobotCamera(hardwareMap,"camera",cameraID);
+        motifCam = new RobotCamera(hardwareMap,"motifCam",motifCamID);
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -125,7 +129,11 @@ public class Robot {
         return rotator.fixCurrentArtifacts(motif);
     }
 
-    public pieceType[] getMotif() {return camera.getMotif();}
+    public pieceType[] getMotif() {return motifCam.getMotif();}
+
+    public void stopMotifStreaming() {motifCam.stopStreaming();}
+
+    public void resumeMotifStreaming() {motifCam.resumeStreaming();}
 
     public boolean doesIntakeContainPiece() {return rotator.doesIntakeContainPiece();}
 

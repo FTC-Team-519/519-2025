@@ -103,7 +103,7 @@ public class CompetitionTeleOp extends OpModeBase {
             if (detMotif != null) {
                 motif = detMotif;
                 hasDetectedMotif = true;
-//                robot.stopMotifStreaming();
+                robot.stopMotifStreaming();
            }
         }
     }
