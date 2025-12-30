@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.util.hardware;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.rev.*;
 import com.qualcomm.robotcore.hardware.*;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.*;
 //import org.firstinspires.ftc.teamcode.util.structs.ComparableCircularList;
 

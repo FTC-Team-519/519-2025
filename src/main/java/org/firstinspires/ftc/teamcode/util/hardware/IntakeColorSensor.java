@@ -51,13 +51,17 @@ public class IntakeColorSensor {
     }
 
     public pieceType get_piece(){
-        if (get_distance_inch() < (2.0)) {
+        if (get_distance_inch() > (2.5) || get_distance_inch() < (0.32)) {
             return IntakeColorSensor.pieceType.NOT_THERE;
-        } else if (get_hsv()[0] > 160) {
+        } else if ((double)(get_rgb()[1])/get_rgb()[0] > 2.1) {
             return IntakeColorSensor.pieceType.GREEN;
         } else {
             return IntakeColorSensor.pieceType.PURPLE;
         }
+    }
+
+    public double get_alpha(){
+        return colorSensor.alpha();
     }
 
     public static pieceType combine(pieceType p1, pieceType p2){

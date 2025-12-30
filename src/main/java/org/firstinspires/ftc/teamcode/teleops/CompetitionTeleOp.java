@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
+import org.firstinspires.ftc.teamcode.util.commands.actions.FinishedCommand;
+import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor;
 import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectForAprilTag;
@@ -24,6 +26,8 @@ public class CompetitionTeleOp extends OpModeBase {
     private double outtake_power = 0.0;
     private RotationSetting rotationSetting = AutoRotate;
 
+    private IntakeColorSensor otherSensor;
+
     private Queue<Command> commands_to_run = new LinkedList<>();
 
     enum RotationSetting{
@@ -36,6 +40,7 @@ public class CompetitionTeleOp extends OpModeBase {
     @Override
     public void init() {
         super.init();
+        otherSensor = new IntakeColorSensor(hardwareMap,"colorSensor3");
     }
 
     //we are not solving this right now
@@ -219,7 +224,7 @@ public class CompetitionTeleOp extends OpModeBase {
     }
 
     private void driving() {
-        if (gamepad1.aWasReleased()) {
+        if (gamepad1.rightBumperWasReleased()) {
             driving_field_centric = !driving_field_centric;
             robot.resetYaw();
         }
@@ -259,7 +264,8 @@ public class CompetitionTeleOp extends OpModeBase {
         }
 
         if (gamepad1.leftBumperWasPressed()) {
-            commands_to_run.add(new CorrectForAprilTag(robot));
+            commands_to_run.add(new FinishedCommand()); // error here because we aren't initializing the first command in the list,
+            commands_to_run.add(new CorrectForAprilTag(robot)); // this crashes because it doesn't initialize internally
         }
 
 
@@ -319,13 +325,21 @@ public class CompetitionTeleOp extends OpModeBase {
             //if (robot.getRotator().getPieceColor() != null) {
             telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
             telemetry.addData("color sensor 1 rgb", Arrays.toString(robot.getRotator().getColorSensor1().get_rgb()));
+            telemetry.addData("color sensor 1 alpha",robot.getRotator().getColorSensor1().get_alpha());
             telemetry.addData("color sensor 1 hsv", Arrays.toString(robot.getRotator().getColorSensor1().get_hsv()));
             telemetry.addData("color sensor 1 distance", robot.getRotator().getColorSensor1().get_distance_inch());
             telemetry.addData("color sensor 1 sensing", robot.getRotator().getColorSensor1().get_piece());
             telemetry.addData("color sensor 2 rgb", Arrays.toString(robot.getRotator().getColorSensor2().get_rgb()));
+            telemetry.addData("color sensor 2 alpha",robot.getRotator().getColorSensor2().get_alpha());
             telemetry.addData("color sensor 2 hsv", Arrays.toString(robot.getRotator().getColorSensor2().get_hsv()));
             telemetry.addData("color sensor 2 distance", robot.getRotator().getColorSensor2().get_distance_inch());
             telemetry.addData("color sensor 2 sensing", robot.getRotator().getColorSensor2().get_piece());
+            telemetry.addData("side color sensor rgb", Arrays.toString(otherSensor.get_rgb()));
+            telemetry.addData("side color sensor alpha",otherSensor.get_alpha());
+            telemetry.addData("side color sensor hsv", Arrays.toString(otherSensor.get_hsv()));
+            telemetry.addData("side color sensor distance", otherSensor.get_distance_inch());
+            telemetry.addData("side color sensor sensing",otherSensor.get_piece());
+
             //}
         } catch (NullPointerException ignored) {
 
