@@ -28,7 +28,7 @@ public class BasicOpMode extends LinearOpMode {
         runtime.reset();
 
         while(opModeIsActive()) {
-            robot.updateRotatorStuff();
+            robot.updateArtifacts();
 
             double max;
 
@@ -66,7 +66,7 @@ public class BasicOpMode extends LinearOpMode {
             telemetry.addData("Rotator power",gamepad1.right_trigger + " - " + gamepad1.left_trigger);
 
             if(gamepad1.a && !aPressed) {
-                robot.fixRotatorArtifacts(motif);
+                //robot.fixRotatorArtifacts(motif);
                 aPressed = true;
             }
             else if(!gamepad1.a && aPressed) {

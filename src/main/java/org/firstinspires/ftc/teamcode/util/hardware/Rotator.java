@@ -36,39 +36,15 @@ public class Rotator {
 
     private final IntakeColorSensor colorSensor2;
 
-    private final pieceType[] currentArtifacts = new pieceType[3];
-
     private int currentPosition = 0;
 
     private boolean seen = false;
-
-    public void updateCurrentArtifacts() {
-        if (getPosition() != currentPosition) {
-            currentArtifacts[getPosition()] = getPieceColor();
-            currentPosition = getPosition();
-        }
-    }
 
     public void setToNext() {
         motor.setTargetPosition(motor.getTargetPosition()+(int)(getEncoderClicksPerRotation()/3.0));
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    //assuming proper alignment
-    public boolean fixCurrentArtifacts(pieceType[] motif) {
-        if (!Arrays.equals(currentArtifacts, motif)) {
-            if (Arrays.equals(motif, rotatePieceArray(currentArtifacts))) {
-                motor.setTargetPosition((int) (motor.getCurrentPosition() + getEncoderClicksPerRotation() / 3));
-                return true;
-            } else if (Arrays.equals(motif, rotatePieceArray(rotatePieceArray(currentArtifacts)))) {
-                motor.setTargetPosition((int) (motor.getCurrentPosition() - getEncoderClicksPerRotation() / 3));
-                return true;
-            }
-        } else {
-            return true;
-        }
-        return false;
-    }
 
     public pieceType[] rotatePieceArray(pieceType[] orig) {
         pieceType[] ans = new pieceType[3];
@@ -76,10 +52,6 @@ public class Rotator {
         ans[1] = orig[0];
         ans[2] = orig[1];
         return ans;
-    }
-
-    public pieceType[] getCurrentArtifacts() {
-        return currentArtifacts;
     }
 
     public Rotator(HardwareMap hardwareMap) {
@@ -101,10 +73,6 @@ public class Rotator {
 
     public double distance() {
         return Math.min(colorSensor1.get_distance_inch(), colorSensor1.get_distance_inch());
-    }
-
-    public IntakeColorSensor.pieceType[] getCurrentOrder() {
-        return currentArtifacts;
     }
 
     public boolean doesIntakeContainPiece() {

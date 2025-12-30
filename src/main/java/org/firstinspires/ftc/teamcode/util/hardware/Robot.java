@@ -4,6 +4,8 @@ import com.qualcomm.hardware.rev.*;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.*;
+
+import java.util.Arrays;
 //import org.firstinspires.ftc.teamcode.util.structs.ComparableCircularList;
 
 public class Robot {
@@ -26,6 +28,8 @@ public class Robot {
     private final RobotCamera motifCam;
 
     private pieceType[] motif = null;
+    private pieceType[] pieces = new pieceType[3];
+    private int currentPosition = 0;
     private final int motifCamID = 0;
 
     public Outtake getOuttake() {
@@ -81,6 +85,21 @@ public class Robot {
 
     public double distanceFromPiece() {return rotator.distance();}
 
+    public int rotationsForMotif() {
+        if(motif==null || Arrays.equals(motif,pieces)) {return 0;}
+        else if(Arrays.equals(motif,rotate(pieces))) {return 1;}
+        else if(Arrays.equals(motif,rotate(rotate(pieces)))) {return 2;}
+        return 0;
+    }
+
+    private <T> T[] rotate(T[] orig) {
+        T[] ans = orig.clone();
+        ans[0] = orig[2];
+        ans[1] = orig[0];
+        ans[2] = orig[1];
+        return ans;
+    }
+
     public double[] getDistancesFromAprilTag() {
 //        double[] ans = camera.distances();
 //        cache.set(ans[0]);
@@ -123,14 +142,6 @@ public class Robot {
         rotator.runMotor(power);
     }
 
-    public void updateRotatorStuff() {
-        rotator.updateCurrentArtifacts();
-    }
-
-    public boolean fixRotatorArtifacts(pieceType[] motif) {
-        return rotator.fixCurrentArtifacts(motif);
-    }
-
     public pieceType[] getMotif() {return motif;}
 
     public void updateMotif() {
@@ -143,15 +154,22 @@ public class Robot {
         }
     }
 
+    public pieceType[] getArtifacts() {
+        return pieces;
+    }
+
+    public void updateArtifacts() {
+        if (rotator.getPosition() != currentPosition) {
+            pieces[rotator.getPosition()] = rotator.getPieceColor();
+            currentPosition = rotator.getPosition();
+        }
+    }
+
     public void stopMotifStreaming() {motifCam.stopStreaming();}
 
     public void resumeMotifStreaming() {motifCam.resumeStreaming();}
 
     public boolean doesIntakeContainPiece() {return rotator.doesIntakeContainPiece();}
-
-    public pieceType[] currentRotatorArtifacts() {
-        return rotator.getCurrentArtifacts();
-    }
 
     public int getRotatorEncoderPosition() {
         return rotator.getEncoderPosition();
@@ -203,7 +221,7 @@ public class Robot {
 
     public String piecesIn() {
         String ans = "";
-        for(pieceType p: currentRotatorArtifacts()) {
+        for(pieceType p: pieces) {
             if(p!=null) {
                 ans += pieceType(p) + " ";
             } else {
