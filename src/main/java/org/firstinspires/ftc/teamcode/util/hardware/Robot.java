@@ -52,6 +52,8 @@ public class Robot {
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intakeMotor");
 
         outtake = new Outtake(hardwareMap);
+        outtake.changePIDFCoefficients(Outtake.optimalP, Outtake.optimalF);
+
         rotator = new Rotator(hardwareMap);
         kicker = new Kicker(hardwareMap);
         camera = new RobotCamera(hardwareMap,"camera",cameraID);
@@ -76,6 +78,10 @@ public class Robot {
     }
 
     public void runOuttake(double power) {outtake.runMotors(power);}
+
+    public void changeOuttakePIDFCoefficients(double P, double F) {
+        outtake.changePIDFCoefficients(P, F);
+    }
 
     public boolean isRotatorAligned() {return rotator.isAligned();}
 

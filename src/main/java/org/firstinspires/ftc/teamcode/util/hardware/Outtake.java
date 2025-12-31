@@ -5,6 +5,10 @@ import org.firstinspires.ftc.teamcode.util.RobotMath;
 
 public class Outtake {
 
+    public final static double optimalP = 7;
+
+    public final static double optimalF = 12.1728;
+
     private final DcMotorEx LeftMotor;
     private final DcMotorEx RightMotor;
     public Outtake(HardwareMap hardwareMap) {
@@ -26,6 +30,16 @@ public class Outtake {
 
     public DcMotorEx getLeftMotor() {return LeftMotor;}
     public DcMotorEx getRightMotor() {return RightMotor;}
+
+    public void changePIDFCoefficients(double P, double F) {
+        LeftMotor.setVelocityPIDFCoefficients(P, 0, 0, F);
+        RightMotor.setVelocityPIDFCoefficients(P, 0, 0, F);
+    }
+
+    public void setVelocity(double velocity) {
+        LeftMotor.setVelocity(velocity);
+        RightMotor.setVelocity(velocity/1.1); // for straightness
+    }
 
     public void runMotors(double power) {
         LeftMotor.setVelocity(power * RobotMath.POWER_TO_VELOCITY_CONVERSION_FACTOR); // we do the conversion behind the scenes for simplicity
