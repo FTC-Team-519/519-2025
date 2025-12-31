@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.util.hardware;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.firstinspires.ftc.teamcode.util.RobotMath;
+
 public class Outtake {
 
     private final DcMotorEx LeftMotor;
@@ -26,7 +28,7 @@ public class Outtake {
     public DcMotorEx getRightMotor() {return RightMotor;}
 
     public void runMotors(double power) {
-        LeftMotor.setPower(power);
-        RightMotor.setPower(power/1.1); //this will help the robot shoot straighter
+        LeftMotor.setVelocity(power * RobotMath.POWER_TO_VELOCITY_CONVERSION_FACTOR); // we do the conversion behind the scenes for simplicity
+        RightMotor.setVelocity(power/1.1 * RobotMath.POWER_TO_VELOCITY_CONVERSION_FACTOR); //this will help the robot shoot straighter
     }
 }

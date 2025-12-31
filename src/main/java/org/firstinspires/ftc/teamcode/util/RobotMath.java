@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.util;
 
 public class RobotMath {
 
+    public final static double POWER_TO_VELOCITY_CONVERSION_FACTOR = 2225.0; // a magic number that I found by using
+    // our auto-power stuff and when it shot correctly. Used to convert old power values into velocity values.
+
     //copied from https://github.com/openjdk/jdk/blob/256a9beffc106d6657a912a33f97e7f97acbb1e1/src/java.base/share/classes/java/lang/Math.java#L2219
     /**
      * Clamps the value to fit between min and max. If the value is less
