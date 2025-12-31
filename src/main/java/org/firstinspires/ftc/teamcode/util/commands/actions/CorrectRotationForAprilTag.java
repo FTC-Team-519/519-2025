@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
@@ -67,8 +67,8 @@ public class CorrectRotationForAprilTag implements Command {
     @Override
     public void shutdown() {
         robot.setAllDrivePower(0.0);
-        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setDriveMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setDriveMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         robot.setAllDrivePower(0.0);
     }
 }

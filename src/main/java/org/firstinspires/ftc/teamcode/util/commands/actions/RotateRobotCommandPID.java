@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
@@ -30,7 +30,7 @@ public class RotateRobotCommandPID implements Command {
     }
 
     public void init() {
-        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setDriveMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         robot.resetYaw();
         prevTime = System.nanoTime();
     }
@@ -65,7 +65,7 @@ public class RotateRobotCommandPID implements Command {
     public void shutdown() {
         robot.setAllDrivePower(0);
         robot.resetYaw();
-        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setDriveMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setDriveMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 }

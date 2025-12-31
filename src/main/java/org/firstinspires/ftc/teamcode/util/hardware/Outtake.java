@@ -3,27 +3,27 @@ package org.firstinspires.ftc.teamcode.util.hardware;
 import com.qualcomm.robotcore.hardware.*;
 public class Outtake {
 
-    private final DcMotor LeftMotor;
-    private final DcMotor RightMotor;
+    private final DcMotorEx LeftMotor;
+    private final DcMotorEx RightMotor;
     public Outtake(HardwareMap hardwareMap) {
-        LeftMotor = hardwareMap.get(DcMotor.class,"leftOuttakeMotor");
-        RightMotor = hardwareMap.get(DcMotor.class,"rightOuttakeMotor");
+        LeftMotor = hardwareMap.get(DcMotorEx.class,"leftOuttakeMotor");
+        RightMotor = hardwareMap.get(DcMotorEx.class,"rightOuttakeMotor");
 
-        LeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        RightMotor.setDirection(DcMotor.Direction.REVERSE);
+        LeftMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        RightMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
-        LeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        RightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        LeftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        RightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
-        LeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        RightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        LeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        RightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
-    public DcMotor getLeftMotor() {return LeftMotor;}
-    public DcMotor getRightMotor() {return RightMotor;}
+    public DcMotorEx getLeftMotor() {return LeftMotor;}
+    public DcMotorEx getRightMotor() {return RightMotor;}
 
     public void runMotors(double power) {
         LeftMotor.setPower(power);
