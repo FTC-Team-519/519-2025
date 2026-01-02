@@ -15,17 +15,17 @@ public class Outtake {
         LeftMotor = hardwareMap.get(DcMotorEx.class,"leftOuttakeMotor");
         RightMotor = hardwareMap.get(DcMotorEx.class,"rightOuttakeMotor");
 
-        LeftMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        RightMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        LeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        RightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        LeftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        RightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        LeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        RightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        LeftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        RightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        LeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        LeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        RightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        LeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public DcMotorEx getLeftMotor() {return LeftMotor;}

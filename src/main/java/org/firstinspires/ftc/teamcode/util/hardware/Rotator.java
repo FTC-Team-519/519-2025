@@ -20,7 +20,7 @@ public class Rotator {
     public static final double POS_COEF = 0.007;
     public static final double DERIVATIVE_COEF = -0.40;
 
-    private final DcMotorEx motor;
+    private final DcMotor motor;
 
     public IntakeColorSensor getColorSensor1() {
         return colorSensor1;
@@ -42,7 +42,7 @@ public class Rotator {
 
     public void setToNext() {
         motor.setTargetPosition(motor.getTargetPosition()+(int)(getEncoderClicksPerRotation()/3.0));
-        motor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 
@@ -55,10 +55,10 @@ public class Rotator {
     }
 
     public Rotator(HardwareMap hardwareMap) {
-        motor = hardwareMap.get(DcMotorEx.class, "rotatorMotor");
-        motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        motor = hardwareMap.get(DcMotor.class, "rotatorMotor");
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setTargetPosition(0);
         colorSensor1 = new IntakeColorSensor(hardwareMap,"colorSensor1");
         colorSensor2 = new IntakeColorSensor(hardwareMap,"colorSensor2");
@@ -84,7 +84,7 @@ public class Rotator {
         return ret;
     }
 
-    public DcMotorEx getMotor() {
+    public DcMotor getMotor() {
         return motor;
     }
 
@@ -146,8 +146,8 @@ public class Rotator {
     }
 
     public void resetEncoder() {
-        motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public double getEncoderClicksPerRotation() {

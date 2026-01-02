@@ -9,7 +9,7 @@ import java.util.Arrays;
 //import org.firstinspires.ftc.teamcode.util.structs.ComparableCircularList;
 
 public class Robot {
-    private final DcMotorEx leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
+    private final DcMotor leftFrontDrive,leftBackDrive,rightFrontDrive,rightBackDrive,intakeMotor;
 
     IMU imu;
 
@@ -45,11 +45,11 @@ public class Robot {
     private final Kicker kicker;
 
     public Robot(HardwareMap hardwareMap) {
-        leftFrontDrive = hardwareMap.get(DcMotorEx.class,"leftFront");
-        leftBackDrive = hardwareMap.get(DcMotorEx.class,"leftBack");
-        rightFrontDrive = hardwareMap.get(DcMotorEx.class,"rightFront");
-        rightBackDrive = hardwareMap.get(DcMotorEx.class,"rightBack");
-        intakeMotor = hardwareMap.get(DcMotorEx.class,"intakeMotor");
+        leftFrontDrive = hardwareMap.get(DcMotor.class,"leftFront");
+        leftBackDrive = hardwareMap.get(DcMotor.class,"leftBack");
+        rightFrontDrive = hardwareMap.get(DcMotor.class,"rightFront");
+        rightBackDrive = hardwareMap.get(DcMotor.class,"rightBack");
+        intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
 
         outtake = new Outtake(hardwareMap);
         outtake.changePIDFCoefficients(Outtake.optimalP, Outtake.optimalF);
@@ -59,16 +59,16 @@ public class Robot {
         camera = new RobotCamera(hardwareMap,"camera",cameraID);
         motifCam = new RobotCamera(hardwareMap,"motifCam",motifCamID);
 
-        leftFrontDrive.setDirection(DcMotorEx.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotorEx.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotorEx.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotorEx.Direction.FORWARD);
-        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         intakeMotor.setTargetPosition(0);
-        intakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rotator.getMotor().setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rotator.getMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotator.resetEncoder();
 
 //        cache = new ComparableCircularList<>(length,0.0d);
@@ -92,9 +92,9 @@ public class Robot {
     public double distanceFromPiece() {return rotator.distance();}
 
     public int rotationsForMotif() {
-        if(motif==null || Arrays.equals(motif,pieces)) {return 0;}
-        else if(Arrays.equals(motif,rotate(pieces))) {return 1;}
-        else if(Arrays.equals(motif,rotate(rotate(pieces)))) {return 2;}
+        if(motif==null || Arrays.equals(motif,pieces)) {return rotator.getPosition();}
+        else if(Arrays.equals(motif,rotate(pieces))) {return ((1+rotator.getPosition())%3);}
+        else if(Arrays.equals(motif,rotate(rotate(pieces)))) {return ((2+rotator.getPosition())%3);}
         return 0;
     }
 
@@ -124,10 +124,10 @@ public class Robot {
     public void resumeStreaming() {}//camera.resumeStreaming();
     //public void stopMotifStreaming() {motifCam.stopStreaming();}
 
-    public DcMotorEx getIntakeMotor() {
+    public DcMotor getIntakeMotor() {
         return intakeMotor;
     }
-    public DcMotorEx getRotatorMotor() {
+    public DcMotor getRotatorMotor() {
         return rotator.getMotor();
     }
 
@@ -186,12 +186,12 @@ public class Robot {
     }
 
     public boolean intakeAtPosition() {
-        return intakeMotor.getMode().equals(DcMotorEx.RunMode.RUN_TO_POSITION) &&
+        return intakeMotor.getMode().equals(DcMotor.RunMode.RUN_TO_POSITION) &&
                 intakeMotor.getCurrentPosition()==intakeMotor.getTargetPosition();
     }
 
     public void runIntake(double inPower) {
-        if(intakeMotor.getMode().equals(DcMotorEx.RunMode.RUN_TO_POSITION)) {
+        if(intakeMotor.getMode().equals(DcMotor.RunMode.RUN_TO_POSITION)) {
             intakeMotor.setPower(1.0d);
         } else {
             intakeMotor.setPower(inPower);
@@ -199,12 +199,12 @@ public class Robot {
     }
 
     public void swapIntakeRunMode() {
-        if(intakeMotor.getMode().equals(DcMotorEx.RunMode.RUN_USING_ENCODER)) {
+        if(intakeMotor.getMode().equals(DcMotor.RunMode.RUN_USING_ENCODER)) {
             intakeMotor.setTargetPosition(0);
-            intakeMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             intakeMotor.setPower(1.0d);
         } else {
-            intakeMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             intakeMotor.setPower(0.0d);
         }
     }
@@ -270,19 +270,19 @@ public class Robot {
         kicker.runRotator(power);
     }
 
-    public DcMotorEx getLeftFrontDrive() {
+    public DcMotor getLeftFrontDrive() {
         return leftFrontDrive;
     }
 
-    public DcMotorEx getLeftBackDrive() {
+    public DcMotor getLeftBackDrive() {
         return leftBackDrive;
     }
 
-    public DcMotorEx getRightFrontDrive() {
+    public DcMotor getRightFrontDrive() {
         return rightFrontDrive;
     }
 
-    public DcMotorEx getRightBackDrive() {
+    public DcMotor getRightBackDrive() {
         return rightBackDrive;
     }
 
@@ -315,7 +315,7 @@ public class Robot {
         return (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     }
 
-    public void setDriveMode(DcMotorEx.RunMode mode) {
+    public void setDriveMode(DcMotor.RunMode mode) {
         leftFrontDrive.setMode(mode);
         rightFrontDrive.setMode(mode);
         leftBackDrive.setMode(mode);
@@ -356,7 +356,7 @@ public class Robot {
         leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition()-pos);
         rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition()+pos);
         rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition()+pos);
-        setDriveMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void setRotationClockwise(int pos) {

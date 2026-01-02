@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.util.commands.actions;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
@@ -22,8 +22,8 @@ public class DriveInDirection implements Command {
 
     @Override
     public void init() {
-        this.robot.setDriveMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        this.robot.setDriveMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        this.robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.robot.setDriveTargetPosition((int) distance); //we might need to tweak this value a bit
     }
 
@@ -61,8 +61,8 @@ public class DriveInDirection implements Command {
     @Override
     public void shutdown() {
         this.robot.setAllDrivePower(0.0);
-        this.robot.setDriveMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        this.robot.setDriveMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        this.robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public final static double FORWARDS = (Math.PI / 2.0);
