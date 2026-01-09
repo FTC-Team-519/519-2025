@@ -24,7 +24,7 @@ public class CrashRobot extends OpModeBase {
                 break;
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
-                    robot.getRotator().runMotorToPositionPID();
+                    robot.getRotator().runMotorToPositionPIDF();
                     if (gamepad2.right_stick_x != 0.0){
                         robot.getKicker().runRotator(0.5);
                     }

@@ -3,19 +3,19 @@ package org.firstinspires.ftc.teamcode.util.commands.actions;
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 
-public class DiskRotatePID implements Command {
+public class DiskRotatePIDF implements Command {
 
     private Robot robot;
     private int rotate_sectors;
 
     private TimerCommand waitTimer;
 
-    public DiskRotatePID(Robot robot, int rotate_sectors) {
+    public DiskRotatePIDF(Robot robot, int rotate_sectors) {
         this.robot = robot;
         this.rotate_sectors = rotate_sectors;
     }
 
-    public DiskRotatePID(Robot robot, boolean clockwise) {
+    public DiskRotatePIDF(Robot robot, boolean clockwise) {
         this(robot, clockwise?1:-1);
     }
 
@@ -26,7 +26,7 @@ public class DiskRotatePID implements Command {
 
     @Override
     public void run() {
-        robot.getRotator().runMotorToPositionPID();
+        robot.getRotator().runMotorToPositionPIDF();
     }
 
     @Override

@@ -14,11 +14,12 @@ public class Rotator {
     //might need to tweak
     public final double PRECISION = 10; //unit is clicks
     public final double POWER_CUTTOFF = 0.05;
-    public static final double MAX_SPEED = 0.3;
+    public static final double MAX_SPEED = 0.4;
 
     //pid stuff
-    public static final double POS_COEF = 0.007;
-    public static final double DERIVATIVE_COEF = -0.40;
+    public static final double POS_COEF = 0.003;
+    public static final double DERIVATIVE_COEF = -0.25;
+    public static final double FEEDFORWARD_COEF = 0.02;
 
     private final DcMotor motor;
 
@@ -130,14 +131,21 @@ public class Rotator {
         }
     }
 
-    public void runMotorToPositionPID(){
-        runMotorToPositionPID(POS_COEF, DERIVATIVE_COEF);
+    public void runMotorToPositionPIDF(){
+        runMotorToPositionPIDF(POS_COEF, DERIVATIVE_COEF, FEEDFORWARD_COEF);
     }
 
-    public void runMotorToPositionPID(double p_coef, double d_coef){
+    public void runMotorToPositionPIDF(double p_coef, double d_coef, double f_coef){
         double pos = motor.getTargetPosition() - motor.getCurrentPosition();
         double der = motor.getPower();
         double power = pos * p_coef + der * d_coef;
+
+        if (pos>0){
+            power += f_coef;
+        }else if (pos < 0){
+            power -= f_coef;
+        }
+
         runMotor(power);
     }
 

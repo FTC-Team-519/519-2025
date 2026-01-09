@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.autos;
 
-import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.*;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor;
 import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.*;
-import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType.*;
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 
 import static org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType.*;
@@ -46,7 +44,7 @@ public class ShootThreeArtifacts implements Command {
                         this.rotate_clockwise = false;
                     } else if (motif.equals(new pieceType[]{GREEN, PURPLE, PURPLE})){
                         this.rotate_clockwise = true;
-                        return new DiskRotatePID(robot, false);
+                        return new DiskRotatePIDF(robot, false);
                     }
                     return null;
                 }),
@@ -57,21 +55,21 @@ public class ShootThreeArtifacts implements Command {
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, false),
-                new DiskRotatePID(robot, true),
+                new DiskRotatePIDF(robot, true),
 
                 //second shot
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, false),
-                new DiskRotatePID(robot, true),
+                new DiskRotatePIDF(robot, true),
 
                 //third shot
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, true),
                 new TimerCommand(0.75),
                 new EngageDisengageKicker(robot, 1.0, false),
-                new DiskRotatePID(robot, true),
+                new DiskRotatePIDF(robot, true),
 
                 new OuttakeCommand(robot, 0.0)
         );

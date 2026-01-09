@@ -3,32 +3,38 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.RobotMath;
+import org.firstinspires.ftc.teamcode.util.commands.actions.FinishedCommand;
+import org.firstinspires.ftc.teamcode.util.commands.actions.FixArtifacts;
+import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor;
+import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.CorrectForAprilTag;
-import org.firstinspires.ftc.teamcode.util.commands.actions.DriveInDirection;
-import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.pieceType;
-import org.firstinspires.ftc.teamcode.util.hardware.Rotator;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import java.util.Arrays;
+
 import static org.firstinspires.ftc.teamcode.teleops.CompetitionTeleOpTest.RotationSetting.*;
 
-@TeleOp(name = "Competition TeleOp Test", group = "test")
+@TeleOp(name = "Competition TeleOp Test")
 public class CompetitionTeleOpTest extends OpModeBase {
     private boolean driving_field_centric = false;
     private boolean intaking = false;
     private boolean hasDetectedMotif = false;
-    private pieceType[] motif = null;
     private double outtake_power = 0.0;
     private RotationSetting rotationSetting = AutoRotate;
 
+    private IntakeColorSensor otherSensor;
+
     private Queue<Command> commands_to_run = new LinkedList<>();
 
+    double[] coeffs = { Rotator.POS_COEF, Rotator.DERIVATIVE_COEF, 0 };
+    double[] steps  = { 0.001, 0.01, 0.01 };  // step size per coefficient
+    String[] names  = { "P", "D", "F" };
 
-    private double p_coef = Rotator.POS_COEF;
-    private double d_coef = Rotator.DERIVATIVE_COEF;
+    int selectedIndex = 0; // 0 = P, 1 = D
+
 
     enum RotationSetting{
         AutoAlignment,
@@ -40,31 +46,32 @@ public class CompetitionTeleOpTest extends OpModeBase {
     @Override
     public void init() {
         super.init();
+        otherSensor = new IntakeColorSensor(hardwareMap,"colorSensor3");
     }
 
     //we are not solving this right now
     //FIXME: follow the specification in teleopcontrols.txt
     public void loop() {
         try {
-        if (gamepad2.aWasReleased()) { // when the a button is pressed
-            commands_to_run = new LinkedList<>(); //clear the running commands incase we no longer want
-        }
-
-        if (!commands_to_run.isEmpty()) {
-            Command command = commands_to_run.peek();
-            assert command != null;
-            command.run();
-            if (command.isDone()) {
-                command.shutdown();
-                commands_to_run.remove();
-                Command next_command = commands_to_run.peek();
-                if (next_command != null) {
-                    next_command.init();
-                }
+            if (gamepad2.aWasReleased()) { // when the a button is pressed
+                commands_to_run = new LinkedList<>(); //clear the running commands incase we no longer want
             }
-        } else {
-            manual_controls();
-        }} catch (Exception e) {
+
+            if (!commands_to_run.isEmpty()) {
+                Command command = commands_to_run.peek();
+                assert command != null;
+                command.run();
+                if (command.isDone()) {
+                    command.shutdown();
+                    commands_to_run.remove();
+                    Command next_command = commands_to_run.peek();
+                    if (next_command != null) {
+                        next_command.init();
+                    }
+                }
+            } else {
+                manual_controls();
+            }} catch (Exception e) {
             telemetry.addData("error", e.toString());
             telemetry.update();
         }
@@ -89,6 +96,8 @@ public class CompetitionTeleOpTest extends OpModeBase {
         //driving
         driving();
 
+        robot.updateArtifacts();
+
         //telemetry
         telemetry();
     }
@@ -99,15 +108,16 @@ public class CompetitionTeleOpTest extends OpModeBase {
 //            robot.stopStreaming();
 //        } else if (gamepad2.rightBumperWasPressed()) {
 //            robot.resumeStreaming();
-//        }
+//        } FIXME:either remove this code or get it working b\c it crashes the robot
 
-        if(!hasDetectedMotif) {
-            pieceType[] detMotif = robot.getMotif();
-            if (detMotif != null) {
-                motif = detMotif;
-                hasDetectedMotif = true;
-            }
-        }
+//        if(motif == null) {
+//            pieceType[] detMotif = robot.getMotif();
+//            if (detMotif != null) {
+//                motif = detMotif;
+//                robot.stopMotifStreaming();
+//           }
+//        }
+        robot.updateMotif();
     }
 
     private void outtake() {
@@ -125,12 +135,10 @@ public class CompetitionTeleOpTest extends OpModeBase {
             outtake_power = 0.6;
         }
         if(gamepad2.bWasPressed() && Arrays.stream(robot.getIds()).anyMatch((i)-> i==20 || i ==24)) {
-            outtake_power = 0.8*RobotMath.outPower(robot.getDistancesFromAprilTag()[1]); // 0.016 being our untested distance {FIXME: Set to a final variable}
+            outtake_power = RobotMath.outPower(robot.getDistancesFromAprilTag()[1]); // 0.016 being our untested distance {FIXME: Set to a final variable}
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
         robot.runOuttake(outtake_power);
-
-
     }
 
     private void kicking() {
@@ -151,7 +159,7 @@ public class CompetitionTeleOpTest extends OpModeBase {
                 break;
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
-                    robot.getRotator().runMotorToPositionPID(p_coef, d_coef);
+                    robot.getRotator().runMotorToPositionPIDF(coeffs[0], coeffs[1], coeffs[2]);
                     if (gamepad2.right_stick_x != 0.0){
                         robot.getKicker().runRotator(0.5);
                     }
@@ -191,7 +199,7 @@ public class CompetitionTeleOpTest extends OpModeBase {
             this.rotationSetting = AutoRotate;
         } else if (gamepad2.rightBumperWasReleased()) {
             //counter clock wise
-            robot.getRotator().setDiskRotation(true); //FIXME:If we rotate left then right with the bumpers then the robot crashs
+            robot.getRotator().setDiskRotation(true);
             this.rotationSetting = AutoRotate;
         }
 
@@ -205,22 +213,34 @@ public class CompetitionTeleOpTest extends OpModeBase {
             this.rotationSetting = AutoAlignment;
         }
 
-        //code for pid tuning
-        if (gamepad2.dpadUpWasPressed()){
-            p_coef += 0.001;
-        }
-        if (gamepad2.dpadDownWasPressed()){
-            p_coef -= 0.001;
-        }
-        if (gamepad2.dpadRightWasPressed()){
-            d_coef += 0.01;
-        }
-        if (gamepad2.dpadLeftWasPressed()){
-            d_coef -= 0.01;
+        if (gamepad2.dpadUpWasPressed()) {
+            coeffs[selectedIndex] += steps[selectedIndex];
         }
 
-        p_coef = RobotMath.clamp(p_coef, 0.0, 1.0);
-        d_coef = RobotMath.clamp(d_coef, -1.0, 0.0);
+        if (gamepad2.dpadDownWasPressed()) {
+            coeffs[selectedIndex] -= steps[selectedIndex];
+        }
+
+        if (gamepad2.dpadRightWasPressed()) {
+            selectedIndex++;
+            if (selectedIndex >= coeffs.length) {
+                selectedIndex = 0;
+            }
+        }
+
+        if (gamepad2.dpadLeftWasPressed()) {
+            selectedIndex--;
+            if (selectedIndex < 0) {
+                selectedIndex = coeffs.length - 1;
+            }
+        }
+
+//        if(gamepad2.dpadRightWasReleased() || gamepad2.dpadLeftWasReleased()){
+//            commands_to_run.add(new FixArtifacts(robot));
+//            if(commands_to_run.size()==1) {
+//                commands_to_run.element().init();
+//            }
+//        }
     }
 
     private void intake() {
@@ -240,7 +260,7 @@ public class CompetitionTeleOpTest extends OpModeBase {
     }
 
     private void driving() {
-        if (gamepad1.aWasReleased()) {
+        if (gamepad1.rightBumperWasReleased()) {
             driving_field_centric = !driving_field_centric;
             robot.resetYaw();
         }
@@ -279,8 +299,11 @@ public class CompetitionTeleOpTest extends OpModeBase {
             raw_driving(x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle), 0.0);
         }
 
-        if (gamepad2.leftBumperWasPressed()) {
+        if (gamepad1.leftBumperWasPressed()) {
             commands_to_run.add(new CorrectForAprilTag(robot));
+            if(commands_to_run.size()==1) {
+                commands_to_run.element().init();
+            }
         }
 
 
@@ -314,8 +337,12 @@ public class CompetitionTeleOpTest extends OpModeBase {
     private void telemetry() {
 
         double[] distanceArray = robot.getDistancesFromAprilTag();
-        telemetry.addData("p_coef", p_coef);
-        telemetry.addData("d_coef", d_coef);
+
+        telemetry.addData("Selected", names[selectedIndex]);
+        for (int i = 0; i < coeffs.length; i++) {
+            telemetry.addData(names[i], coeffs[i]);
+        }
+
         telemetry.addData("magnet seeing", robot.getRotator().isAligned());
 
         telemetry.addData("X Offset", distanceArray[0]);
@@ -327,28 +354,39 @@ public class CompetitionTeleOpTest extends OpModeBase {
 
         telemetry.addData("Field Centric:", driving_field_centric);
         telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
-//        try {
-//            //if (robot.getRotator().getPieceColor() != null) {
-//            telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
-//            telemetry.addData("color sensor 1 rgb", Arrays.toString(robot.getRotator().getColorSensor1().get_rgb()));
-//            telemetry.addData("color sensor 1 hsv", Arrays.toString(robot.getRotator().getColorSensor1().get_hsv()));
-//            telemetry.addData("color sensor 1 distance", robot.getRotator().getColorSensor1().get_distance_inch());
-//            telemetry.addData("color sensor 1 sensing", robot.getRotator().getColorSensor1().get_piece());
-//            telemetry.addData("color sensor 2 rgb", Arrays.toString(robot.getRotator().getColorSensor2().get_rgb()));
-//            telemetry.addData("color sensor 2 hsv", Arrays.toString(robot.getRotator().getColorSensor2().get_hsv()));
-//            telemetry.addData("color sensor 2 distance", robot.getRotator().getColorSensor2().get_distance_inch());
-//            telemetry.addData("color sensor 2 sensing", robot.getRotator().getColorSensor2().get_piece());
-//            //}
-//        } catch (NullPointerException ignored) {
-//
-//        }
+        telemetry.addData("outtake right power:", robot.getOuttake().getRightMotor().getPower());
 
         telemetry.addData("Rotation setting:", this.rotationSetting);
         telemetry.addData("current disk pos: ", robot.getRotator().getEncoderPosition());
         telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
         telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
         telemetry.addData("motor_power", robot.getRotator().getMotor().getPower());
-        telemetry.addData("Current Motif",Arrays.toString(motif));
+        telemetry.addData("Current Motif",Arrays.toString(robot.getMotif()));
+
+
+        try {
+            //if (robot.getRotator().getPieceColor() != null) {
+            telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
+            telemetry.addData("color sensor 1 rgb", Arrays.toString(robot.getRotator().getColorSensor1().get_rgb()));
+            telemetry.addData("color sensor 1 alpha",robot.getRotator().getColorSensor1().get_alpha());
+            telemetry.addData("color sensor 1 hsv", Arrays.toString(robot.getRotator().getColorSensor1().get_hsv()));
+            telemetry.addData("color sensor 1 distance", robot.getRotator().getColorSensor1().get_distance_inch());
+            telemetry.addData("color sensor 1 sensing", robot.getRotator().getColorSensor1().get_piece());
+            telemetry.addData("color sensor 2 rgb", Arrays.toString(robot.getRotator().getColorSensor2().get_rgb()));
+            telemetry.addData("color sensor 2 alpha",robot.getRotator().getColorSensor2().get_alpha());
+            telemetry.addData("color sensor 2 hsv", Arrays.toString(robot.getRotator().getColorSensor2().get_hsv()));
+            telemetry.addData("color sensor 2 distance", robot.getRotator().getColorSensor2().get_distance_inch());
+            telemetry.addData("color sensor 2 sensing", robot.getRotator().getColorSensor2().get_piece());
+//            telemetry.addData("side color sensor rgb", Arrays.toString(otherSensor.get_rgb()));
+//            telemetry.addData("side color sensor alpha",otherSensor.get_alpha());
+//            telemetry.addData("side color sensor hsv", Arrays.toString(otherSensor.get_hsv()));
+//            telemetry.addData("side color sensor distance", otherSensor.get_distance_inch());
+//            telemetry.addData("side color sensor sensing",otherSensor.get_piece());
+            telemetry.addData("pieces",Arrays.toString(robot.getArtifacts()));
+            //}
+        } catch (NullPointerException ignored) {
+
+        }
         telemetry.update();
     }
 }

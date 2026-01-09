@@ -127,7 +127,7 @@ public class CompetitionTeleOp extends OpModeBase {
             outtake_power = 0.0;
         }
         if (gamepad2.yWasReleased()) {
-            outtake_power = 0.6;
+            outtake_power = 0.64;
         }
         if(gamepad2.bWasPressed() && Arrays.stream(robot.getIds()).anyMatch((i)-> i==20 || i ==24)) {
             outtake_power = RobotMath.outPower(robot.getDistancesFromAprilTag()[1]); // 0.016 being our untested distance {FIXME: Set to a final variable}
@@ -154,7 +154,7 @@ public class CompetitionTeleOp extends OpModeBase {
                 break;
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
-                    robot.getRotator().runMotorToPositionPID();
+                    robot.getRotator().runMotorToPositionPIDF(Rotator.POS_COEF, Rotator.DERIVATIVE_COEF, Rotator.FEEDFORWARD_COEF);
                     if (gamepad2.right_stick_x != 0.0){
                         robot.getKicker().runRotator(0.5);
                     }
@@ -321,7 +321,8 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("AprilTag Ids found", Arrays.toString(robot.getIds()));
 
         telemetry.addData("Field Centric:", driving_field_centric);
-        telemetry.addData("outtake power:", robot.getOuttake().getLeftMotor().getPower());
+        telemetry.addData("outtake power:", outtake_power);
+        telemetry.addData("outtake Left power:", robot.getOuttake().getLeftMotor().getPower());
         telemetry.addData("outtake right power:", robot.getOuttake().getRightMotor().getPower());
 
         telemetry.addData("Rotation setting:", this.rotationSetting);

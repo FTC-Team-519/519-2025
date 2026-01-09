@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.autos.testing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
-import org.firstinspires.ftc.teamcode.util.commands.actions.AlignRotator;
-import org.firstinspires.ftc.teamcode.util.commands.actions.DiskRotatePID;
-import org.firstinspires.ftc.teamcode.util.commands.actions.RotateRobotCommandPID;
+import org.firstinspires.ftc.teamcode.util.commands.actions.DiskRotatePIDF;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 
 @Autonomous(name="RotateDiskPIDTest")
@@ -19,7 +17,7 @@ public class RotateDiskPIDTest extends OpModeBase {
     public void init(){
         super.init();
 
-        this.seq = new SequentialCommandGroup(new DiskRotatePID(robot, 3));
+        this.seq = new SequentialCommandGroup(new DiskRotatePIDF(robot, 3));
         this.seq.init();
     }
 

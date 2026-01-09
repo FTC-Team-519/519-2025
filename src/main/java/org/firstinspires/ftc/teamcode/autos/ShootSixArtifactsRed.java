@@ -22,8 +22,8 @@ public class ShootSixArtifactsRed extends OpModeBase {
     @Override
     public void init(){
         super.init();
-        final double shoot_power = 0.60;
-        final double turn_first_balls = 163;
+        final double shoot_power = 0.66;
+        final double turn_first_balls = 160;
         this.seq = new SequentialCommandGroup(
                 MoveAndShootThreeArtifacts.init(robot),
                 new RotateRobotCommandPID(turn_first_balls, robot),

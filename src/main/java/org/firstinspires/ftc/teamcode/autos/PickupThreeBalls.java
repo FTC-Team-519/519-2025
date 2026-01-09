@@ -5,7 +5,6 @@ import org.firstinspires.ftc.teamcode.util.OpModeBase;
 import org.firstinspires.ftc.teamcode.util.commands.Command;
 import org.firstinspires.ftc.teamcode.util.commands.actions.*;
 import org.firstinspires.ftc.teamcode.util.commands.command_groups.ParallelCommandGroup;
-import org.firstinspires.ftc.teamcode.util.commands.command_groups.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 
 // Jonah was here
@@ -19,7 +18,7 @@ public class PickupThreeBalls extends OpModeBase{
         return new ParallelCommandGroup(
                 new IntakeCommand(5.5, 1.0, robot),
                 new DriveForward(27, drive_speed, robot),
-                new DiskRotatePID(robot, 9)
+                new DiskRotatePIDF(robot, 9)
         );
     }
 

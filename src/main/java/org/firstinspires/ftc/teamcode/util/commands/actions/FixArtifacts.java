@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 public class FixArtifacts implements Command {
     Command command = null;
     public FixArtifacts(Robot robot) {
-        command = new DiskRotatePID(robot,robot.rotationsForMotif());
+        command = new DiskRotatePIDF(robot,robot.rotationsForMotif());
     }
 
     public void init() {
