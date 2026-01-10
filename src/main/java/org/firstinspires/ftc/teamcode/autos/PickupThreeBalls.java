@@ -18,7 +18,7 @@ public class PickupThreeBalls extends OpModeBase{
         return new ParallelCommandGroup(
                 new IntakeCommand(5.5, 1.0, robot),
                 new DriveForward(27, drive_speed, robot),
-                new DiskRotatePIDF(robot, 9)
+                new DiskRotatePIDF(robot, -9)
         );
     }
 

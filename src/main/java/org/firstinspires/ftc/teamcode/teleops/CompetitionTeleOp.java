@@ -163,13 +163,13 @@ public class CompetitionTeleOp extends OpModeBase {
                 }
                 break;
             case ManualRotate:
-                if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
-                    this.rotationSetting = AutoRotate;
-                    robot.getRotator().resetEncoder();
-                    robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
-                }else{
-                    robot.getRotator().runMotor((gamepad2.left_trigger - gamepad2.right_trigger));
-                }
+//                if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
+//                    this.rotationSetting = AutoRotate;
+//                    robot.getRotator().resetEncoder();
+//                    robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
+//                }else{
+//                    robot.getRotator().runMotor((gamepad2.left_trigger - gamepad2.right_trigger));
+//                }
                 break;
             case ConstantRotate:
                 robot.getRotator().runMotor(-0.3);
@@ -198,10 +198,11 @@ public class CompetitionTeleOp extends OpModeBase {
             this.rotationSetting = AutoRotate;
         }
 
+        //We are removing manual rotation because we do not use it, we may want it later so keep it in for now: January 10, 2026
         //manual rotation
-        if (gamepad2.left_trigger != 0 || gamepad2.right_trigger != 0) {
-            this.rotationSetting = ManualRotate;
-        }
+//        if (gamepad2.left_trigger != 0 || gamepad2.right_trigger != 0) {
+//            this.rotationSetting = ManualRotate;
+//        }
 
         //will align to the magnet
         if(gamepad2.right_stick_button && gamepad2.left_stick_button){
@@ -216,9 +217,15 @@ public class CompetitionTeleOp extends OpModeBase {
         }
     }
 
+    private double lastRotateCommandTime = 0;
+    private static final double MIN_ROTATE_GAP_SECONDS = 0.6;
+
     private void intake() {
         if (gamepad1.bWasReleased()) {
             intaking = !intaking;
+            if (intaking){
+                lastRotateCommandTime = getRuntime();
+            }
         }
 
         if (gamepad1.x) {
@@ -226,10 +233,30 @@ public class CompetitionTeleOp extends OpModeBase {
         } else {
             if (intaking) {
                 robot.runIntake(1.0);
+
+                // Auto-index while actively intaking
+                //FIXME: NEEDS TESTING
+                boolean seesPiece = robot.getRotator().getPieceColor() != pieceType.NOT_THERE;
+
+                double now = getRuntime();
+                if (seesPiece && Arrays.stream(robot.getArtifacts()).anyMatch((artifact)-> artifact!=pieceType.NOT_THERE)) {
+                    if (robot.getArtifacts()[(robot.getRotatorPosition() - 1) % 3] == pieceType.NOT_THERE){ //rotate twice if the next ball is still there
+                        robot.getRotator().setDiskRotation(-1);
+                    } else{
+                        robot.getRotator().setDiskRotation(-2);
+                    }
+                    lastRotateCommandTime = now;
+                }
             } else {
                 robot.runIntake(0.0);
             }
         }
+    }
+
+    private boolean SeesPiece() {
+        pieceType p1 = robot.getRotator().getPieceColor();
+
+        return p1 == pieceType.GREEN || p1 == pieceType.PURPLE;
     }
 
     private void driving() {
