@@ -20,7 +20,7 @@ public class IntakeColorSensor {
             }else if (this == PURPLE) {
                 return "purple";
             }
-            return "null";
+            return "null!";
         }
     }
 
@@ -47,11 +47,11 @@ public class IntakeColorSensor {
     are we being covered by the disk
      */
     public boolean is_covered(){
-        return (get_distance_inch() < 5.0 && get_hsv()[1] < 10);
+        return (get_distance_inch() < 2.0 || get_hsv()[1] < 10);
     }
 
     public pieceType get_piece(){
-        if (get_distance_inch() > (2.5) || get_distance_inch() < (0.32)) {
+        if (get_distance_inch() > (2.5) || get_distance_inch() < (1.0)) {
             return IntakeColorSensor.pieceType.NOT_THERE;
         } else if ((double)(get_rgb()[1])/get_rgb()[0] > 2.1) {
             return IntakeColorSensor.pieceType.GREEN;

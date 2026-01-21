@@ -14,7 +14,7 @@ public class AlignRotator implements Command {
     public void init() {}
 
     public void run() {
-        robot.runRotatorMotor(-0.15d);
+        robot.runRotatorMotor(-0.08d);
     }
 
     public boolean isDone() {

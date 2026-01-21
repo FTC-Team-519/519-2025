@@ -31,42 +31,40 @@ public class CompetitionTeleOp extends OpModeBase {
 
     private Queue<Command> commands_to_run = new LinkedList<>();
 
-    enum RotationSetting{
-        AutoAlignment,
-        AutoRotate,
-        ManualRotate,
-        ConstantRotate,
+    enum RotationSetting {
+        AutoAlignment, AutoRotate, ManualRotate, ConstantRotate,
     }
 
     @Override
     public void init() {
         super.init();
-        otherSensor = new IntakeColorSensor(hardwareMap,"colorSensor3");
+        otherSensor = new IntakeColorSensor(hardwareMap, "colorSensor3");
     }
 
     //we are not solving this right now
     //FIXME: follow the specification in teleopcontrols.txt
     public void loop() {
         try {
-        if (gamepad2.aWasReleased()) { // when the a button is pressed
-            commands_to_run = new LinkedList<>(); //clear the running commands incase we no longer want
-        }
-
-        if (!commands_to_run.isEmpty()) {
-            Command command = commands_to_run.peek();
-            assert command != null;
-            command.run();
-            if (command.isDone()) {
-                command.shutdown();
-                commands_to_run.remove();
-                Command next_command = commands_to_run.peek();
-                if (next_command != null) {
-                    next_command.init();
-                }
+            if (gamepad2.aWasReleased()) { // when the a button is pressed
+                commands_to_run = new LinkedList<>(); //clear the running commands incase we no longer want
             }
-        } else {
-            manual_controls();
-        }} catch (Exception e) {
+
+            if (!commands_to_run.isEmpty()) {
+                Command command = commands_to_run.peek();
+                assert command != null;
+                command.run();
+                if (command.isDone()) {
+                    command.shutdown();
+                    commands_to_run.remove();
+                    Command next_command = commands_to_run.peek();
+                    if (next_command != null) {
+                        next_command.init();
+                    }
+                }
+            } else {
+                manual_controls();
+            }
+        } catch (Exception e) {
             telemetry.addData("error", e.toString());
             telemetry.update();
         }
@@ -129,7 +127,7 @@ public class CompetitionTeleOp extends OpModeBase {
         if (gamepad2.yWasReleased()) {
             outtake_power = 0.64;
         }
-        if(gamepad2.bWasPressed() && Arrays.stream(robot.getIds()).anyMatch((i)-> i==20 || i ==24)) {
+        if (gamepad2.bWasPressed() && Arrays.stream(robot.getIds()).anyMatch((i) -> i == 20 || i == 24)) {
             outtake_power = RobotMath.outPower(robot.getDistancesFromAprilTag()[1]); // 0.016 being our untested distance {FIXME: Set to a final variable}
         }
         outtake_power = RobotMath.clamp(outtake_power, 0.0, 1.0);
@@ -143,10 +141,10 @@ public class CompetitionTeleOp extends OpModeBase {
     }
 
     private void rotating() {
-        switch (this.rotationSetting){
+        switch (this.rotationSetting) {
             case AutoAlignment:
-                robot.getRotator().runMotor(-0.1);
-                if(robot.isRotatorAligned()){
+                robot.getRotator().runMotor(-0.075);
+                if (robot.isRotatorAligned()) {
                     this.rotationSetting = AutoRotate;
                     robot.getRotator().resetEncoder();
                     robot.getRotator().getMotor().setTargetPosition(robot.getRotatorPosition());
@@ -154,11 +152,11 @@ public class CompetitionTeleOp extends OpModeBase {
                 break;
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
-                    robot.getRotator().runMotorToPositionPIDF(Rotator.POS_COEF, Rotator.DERIVATIVE_COEF, Rotator.FEEDFORWARD_COEF);
-                    if (gamepad2.right_stick_x != 0.0){
+                    robot.runMotorToPositionPIDF(Rotator.POS_COEF, Rotator.DERIVATIVE_COEF, Rotator.FEEDFORWARD_COEF);
+                    if (gamepad2.right_stick_x != 0.0) {
                         robot.getKicker().runRotator(0.5);
                     }
-                }else{
+                } else {
                     robot.getRotator().runMotor(0.0);
                 }
                 break;
@@ -205,13 +203,13 @@ public class CompetitionTeleOp extends OpModeBase {
 //        }
 
         //will align to the magnet
-        if(gamepad2.right_stick_button && gamepad2.left_stick_button){
+        if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
             this.rotationSetting = AutoAlignment;
         }
 
-        if(gamepad2.dpadRightWasReleased() || gamepad2.dpadLeftWasReleased()){
+        if (gamepad2.dpadRightWasReleased() || gamepad2.dpadLeftWasReleased()) {
             commands_to_run.add(new FixArtifacts(robot));
-            if(commands_to_run.size()==1) {
+            if (commands_to_run.size() == 1) {
                 commands_to_run.element().init();
             }
         }
@@ -223,7 +221,7 @@ public class CompetitionTeleOp extends OpModeBase {
     private void intake() {
         if (gamepad1.bWasReleased()) {
             intaking = !intaking;
-            if (intaking){
+            if (intaking) {
                 lastRotateCommandTime = getRuntime();
             }
         }
@@ -239,12 +237,17 @@ public class CompetitionTeleOp extends OpModeBase {
                 boolean seesPiece = robot.getRotator().getPieceColor() != pieceType.NOT_THERE;
 
                 double now = getRuntime();
-                if (seesPiece && Arrays.stream(robot.getArtifacts()).anyMatch((artifact)-> artifact!=pieceType.NOT_THERE)) {
-                    if (robot.getArtifacts()[(robot.getRotatorPosition() - 1) % 3] == pieceType.NOT_THERE){ //rotate twice if the next ball is still there
-                        robot.getRotator().setDiskRotation(-1);
-                    } else{
-                        robot.getRotator().setDiskRotation(-2);
-                    }
+                //piece array is broken, don't rely on it
+//                if (seesPiece && Arrays.stream(robot.getArtifacts()).anyMatch((artifact)-> artifact!=pieceType.NOT_THERE)) {
+//                    if (robot.getArtifacts()[Math.floorMod(robot.getRotatorPosition() - 1, 3)] == pieceType.NOT_THERE){ //rotate twice if the next ball is still there
+//                        robot.getRotator().setDiskRotation(-1);
+//                    } else{
+//                        robot.getRotator().setDiskRotation(-2);
+//                    }
+//                    lastRotateCommandTime = now;
+//                }
+                if (seesPiece) {
+                    robot.getRotator().setDiskRotation(-1);
                     lastRotateCommandTime = now;
                 }
             } else {
@@ -301,7 +304,7 @@ public class CompetitionTeleOp extends OpModeBase {
 
         if (gamepad1.leftBumperWasPressed()) {
             commands_to_run.add(new CorrectForAprilTag(robot));
-            if(commands_to_run.size()==1) {
+            if (commands_to_run.size() == 1) {
                 commands_to_run.element().init();
             }
         }
@@ -321,10 +324,10 @@ public class CompetitionTeleOp extends OpModeBase {
         max = Math.max(max, Math.abs(rb_power));
 
         if (max > 1.0) {
-            lf_power  /= max;
+            lf_power /= max;
             rf_power /= max;
-            lb_power   /= max;
-            rb_power  /= max;
+            lb_power /= max;
+            rb_power /= max;
         }
 
         robot.setLeftFrontPower(lf_power);
@@ -357,19 +360,19 @@ public class CompetitionTeleOp extends OpModeBase {
         telemetry.addData("desired pos:", robot.getRotator().getMotor().getTargetPosition());
         telemetry.addData("position error", robot.getRotator().getMotor().getTargetPosition() - robot.getRotator().getEncoderPosition());
         telemetry.addData("motor_power", robot.getRotator().getMotor().getPower());
-        telemetry.addData("Current Motif",Arrays.toString(robot.getMotif()));
+        telemetry.addData("Current Motif", Arrays.toString(robot.getMotif()));
 
 
         try {
             //if (robot.getRotator().getPieceColor() != null) {
             telemetry.addData("sensing:", robot.getRotator().getPieceColor().toString());
             telemetry.addData("color sensor 1 rgb", Arrays.toString(robot.getRotator().getColorSensor1().get_rgb()));
-            telemetry.addData("color sensor 1 alpha",robot.getRotator().getColorSensor1().get_alpha());
+            telemetry.addData("color sensor 1 alpha", robot.getRotator().getColorSensor1().get_alpha());
             telemetry.addData("color sensor 1 hsv", Arrays.toString(robot.getRotator().getColorSensor1().get_hsv()));
             telemetry.addData("color sensor 1 distance", robot.getRotator().getColorSensor1().get_distance_inch());
             telemetry.addData("color sensor 1 sensing", robot.getRotator().getColorSensor1().get_piece());
             telemetry.addData("color sensor 2 rgb", Arrays.toString(robot.getRotator().getColorSensor2().get_rgb()));
-            telemetry.addData("color sensor 2 alpha",robot.getRotator().getColorSensor2().get_alpha());
+            telemetry.addData("color sensor 2 alpha", robot.getRotator().getColorSensor2().get_alpha());
             telemetry.addData("color sensor 2 hsv", Arrays.toString(robot.getRotator().getColorSensor2().get_hsv()));
             telemetry.addData("color sensor 2 distance", robot.getRotator().getColorSensor2().get_distance_inch());
             telemetry.addData("color sensor 2 sensing", robot.getRotator().getColorSensor2().get_piece());
@@ -378,7 +381,7 @@ public class CompetitionTeleOp extends OpModeBase {
 //            telemetry.addData("side color sensor hsv", Arrays.toString(otherSensor.get_hsv()));
 //            telemetry.addData("side color sensor distance", otherSensor.get_distance_inch());
 //            telemetry.addData("side color sensor sensing",otherSensor.get_piece());
-            telemetry.addData("pieces",Arrays.toString(robot.getArtifacts()));
+            telemetry.addData("pieces", Arrays.toString(robot.getArtifacts()));
             //}
         } catch (NullPointerException ignored) {
 

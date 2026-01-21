@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.Robot;
 
 public class MoveAndShootThreeArtifacts {
     public static Command init(Robot robot) {
-        final double shoot_power = 0.65; //58 is good for teleop
+        final double shoot_power = 0.68; //58 is good for teleop
 
         return new SequentialCommandGroup(
                 new ParallelCommandGroup(

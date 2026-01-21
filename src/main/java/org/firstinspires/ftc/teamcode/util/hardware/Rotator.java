@@ -17,9 +17,9 @@ public class Rotator {
     public static final double MAX_SPEED = 0.4;
 
     //pid stuff
-    public static final double POS_COEF = 0.003;
-    public static final double DERIVATIVE_COEF = -0.25;
-    public static final double FEEDFORWARD_COEF = 0.02;
+    public static final double POS_COEF = 0.0008;
+    public static final double DERIVATIVE_COEF = -0.20;
+    public static final double FEEDFORWARD_COEF = 0.05;
 
     private final DcMotor motor;
 

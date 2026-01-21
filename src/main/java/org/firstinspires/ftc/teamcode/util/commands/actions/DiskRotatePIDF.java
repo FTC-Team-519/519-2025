@@ -26,7 +26,8 @@ public class DiskRotatePIDF implements Command {
 
     @Override
     public void run() {
-        robot.getRotator().runMotorToPositionPIDF();
+        //we are using robot.updateDiskPower(); to run the disk
+        //this Command just sets the target position and waits to get there
     }
 
     @Override

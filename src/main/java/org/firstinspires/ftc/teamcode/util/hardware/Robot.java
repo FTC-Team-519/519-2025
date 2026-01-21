@@ -6,6 +6,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.teamcode.util.hardware.IntakeColorSensor.*;
 
 import java.util.Arrays;
+
+import static org.firstinspires.ftc.teamcode.util.hardware.Rotator.*;
 //import org.firstinspires.ftc.teamcode.util.structs.ComparableCircularList;
 
 public class Robot {
@@ -28,7 +30,7 @@ public class Robot {
     private final RobotCamera motifCam;
 
     private pieceType[] motif = null;
-    private pieceType[] pieces = new pieceType[3];
+    private pieceType[] pieces = new pieceType[]{pieceType.NOT_THERE, pieceType.NOT_THERE, pieceType.NOT_THERE};
     private int currentPosition = 0;
     private final int motifCamID = 0;
 
@@ -43,6 +45,12 @@ public class Robot {
     }
 
     private final Kicker kicker;
+
+    public boolean isRotatorPowerSet() {
+        return rotatorPowerSet;
+    }
+
+    private boolean rotatorPowerSet = false;
 
     public Robot(HardwareMap hardwareMap) {
         leftFrontDrive = hardwareMap.get(DcMotor.class,"leftFront");
@@ -78,6 +86,19 @@ public class Robot {
     }
 
     public void runOuttake(double power) {outtake.runMotors(power);}
+
+    public void runMotorToPositionPIDF(){
+        runMotorToPositionPIDF(POS_COEF, DERIVATIVE_COEF, FEEDFORWARD_COEF);
+    }
+
+    public void runMotorToPositionPIDF(double p_coef, double d_coef, double f_coef){
+        rotatorPowerSet = true;
+        if (!kicker.isGoing()) {
+            rotator.runMotorToPositionPIDF(p_coef, d_coef, f_coef);
+        }else{
+            rotator.runMotor(0.0);
+        }
+    }
 
     public void changeOuttakePIDFCoefficients(double P, double F) {
         outtake.changePIDFCoefficients(P, F);
@@ -127,9 +148,10 @@ public class Robot {
     public DcMotor getIntakeMotor() {
         return intakeMotor;
     }
-    public DcMotor getRotatorMotor() {
-        return rotator.getMotor();
-    }
+
+//    public DcMotor getRotatorMotor() {
+//        return rotator.getMotor();
+//    }
 
     public void setLeftFrontPower(double power) {
         leftFrontDrive.setPower(power);
@@ -145,6 +167,7 @@ public class Robot {
     }
 
     public void runRotatorMotor(double power) {
+        rotatorPowerSet = true;
         rotator.runMotor(power);
     }
 
@@ -160,6 +183,19 @@ public class Robot {
         }
     }
 
+    public void updateDiskPower() {
+        if (!rotatorPowerSet) {
+            if (!this.getRotator().isAtPosition()) {
+                this.runMotorToPositionPIDF(Rotator.POS_COEF, Rotator.DERIVATIVE_COEF, Rotator.FEEDFORWARD_COEF);
+            } else {
+                this.getRotator().runMotor(0.0);
+            }
+        }
+        rotatorPowerSet = false;
+    }
+
+
+    //PIECES, except for the one inside the intake is incorrect
     public pieceType[] getArtifacts() {
         return pieces;
     }

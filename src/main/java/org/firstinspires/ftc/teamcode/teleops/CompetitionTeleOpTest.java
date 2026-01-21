@@ -29,8 +29,8 @@ public class CompetitionTeleOpTest extends OpModeBase {
 
     private Queue<Command> commands_to_run = new LinkedList<>();
 
-    double[] coeffs = { Rotator.POS_COEF, Rotator.DERIVATIVE_COEF, 0 };
-    double[] steps  = { 0.001, 0.01, 0.01 };  // step size per coefficient
+    double[] coeffs = { Rotator.POS_COEF, Rotator.DERIVATIVE_COEF, Rotator.FEEDFORWARD_COEF };
+    double[] steps  = { 0.0001, 0.01, 0.01 };  // step size per coefficient
     String[] names  = { "P", "D", "F" };
 
     int selectedIndex = 0; // 0 = P, 1 = D
@@ -159,7 +159,7 @@ public class CompetitionTeleOpTest extends OpModeBase {
                 break;
             case AutoRotate:
                 if (!robot.getRotator().isAtPosition()) {
-                    robot.getRotator().runMotorToPositionPIDF(coeffs[0], coeffs[1], coeffs[2]);
+                    robot.runMotorToPositionPIDF(coeffs[0], coeffs[1], coeffs[2]);
                     if (gamepad2.right_stick_x != 0.0){
                         robot.getKicker().runRotator(0.5);
                     }
